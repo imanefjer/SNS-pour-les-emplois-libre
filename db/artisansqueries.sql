@@ -1,61 +1,90 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3306
--- Generation Time: May 09, 2023 at 06:29 PM
--- Server version: 8.0.31
--- PHP Version: 8.0.26
+-- Create artisans table
+CREATE TABLE IF NOT EXISTS artisans (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- Create users table
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
 
+-- Create services table
+CREATE TABLE IF NOT EXISTS services (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    price VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- Create artisan-services table
+CREATE TABLE IF NOT EXISTS artisan_services (
+    id SERIAL PRIMARY KEY,
+    artisan_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (artisan_id) REFERENCES artisans (id),
+    FOREIGN KEY (service_id) REFERENCES services (id)
+);
 
---
--- Database: `artisans`
---
+-- Create orders table
+CREATE TABLE IF NOT EXISTS orders (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    artisan_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    description TEXT,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (artisan_id) REFERENCES artisans (id),
+    FOREIGN KEY (service_id) REFERENCES services (id)
+);
 
--- --------------------------------------------------------
+-- Create user-status
+CREATE TABLE IF NOT EXISTS user_status (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    artisan_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (artisan_id) REFERENCES artisans (id),
+    FOREIGN KEY (service_id) REFERENCES services (id)
+);
 
---
--- Table structure for table `artisan`
---
-
-DROP TABLE IF EXISTS `artisan`;
-CREATE TABLE IF NOT EXISTS `artisan` (
-  `aid` int NOT NULL,
-  `first_name` varchar(30) DEFAULT NULL,
-  `last_name` varchar(30) DEFAULT NULL,
-  `type_service` varchar(30) DEFAULT NULL,
-  `evaluation` double DEFAULT NULL,
-  `phone_number` varchar(40) DEFAULT NULL,
-  `emplacement` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`aid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `resident`
---
-
-DROP TABLE IF EXISTS `resident`;
-CREATE TABLE IF NOT EXISTS `resident` (
-  `rid` int NOT NULL,
-  `first_name` varchar(30) DEFAULT NULL,
-  `last_name` varchar(30) DEFAULT NULL,
-  `region` varchar(40) DEFAULT NULL,
-  `phone_number` varchar(40) DEFAULT NULL,
-  PRIMARY KEY (`rid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+-- Create reviews table
+CREATE TABLE IF NOT EXISTS reviews (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    artisan_id INTEGER NOT NULL,
+    service_id INTEGER NOT NULL,
+    review VARCHAR(255) NOT NULL,
+    rating INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (artisan_id) REFERENCES artisans (id),
+    FOREIGN KEY (service_id) REFERENCES services (id)
+);
+-- Create aritsan_locations
+CREATE TABLE IF NOT EXISTS artisan_locations (
+    id SERIAL PRIMARY KEY,
+    artisan_id INTEGER NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    FOREIGN KEY (artisan_id) REFERENCES artisans (id)
+);
