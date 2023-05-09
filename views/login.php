@@ -67,7 +67,7 @@
                     <button type="submit" >Log in</button>
                 </form>
                 <div class ="register">
-                    <p>Don’t have an account yet? <br><a href="register.php">Sign up for free</a>.</p>
+                    <p>Don’t have an account yet? <br><a href="register.php">Sign up </a>.</p>
                 </div>
             </div>
 
