@@ -65,7 +65,7 @@
             $error1 = '10';
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             // Check if the username or email already exists in the database             
-            $stmt = $conn->prepare("SELECT * FROM users WHERE name ='$username' OR email='$email'");
+            $stmt = $conn->prepare("SELECT * FROM users WHERE username ='$username' OR email='$email'");
             $stmt->execute();
             $result = $stmt->fetchAll();
             $rownum = $stmt->rowCount();
@@ -74,15 +74,16 @@
                 echo '<script>document.getElementById("error").innerHTML += "Username or email already exists.";</script>';
                 
             } else {
-                if ($type = "user"){
-
-                    $sql = "INSERT INTO users (name, email, password, phone) VALUES ('$username', '$email', '$hashed_password', '$phone')";
-                }
-                else{
-                    $sql = "INSERT INTO artisans (name, email, password, phone) VALUES ('$username', '$email', '$hashed_password', '$phone')";
-                }
+                $sql = "INSERT INTO Users (username, email, password, phone_number, role) VALUES ('$username', '$email', '$hashed_password', '$phone','$type')";
                 $stmt = $conn->prepare($sql);
+                $stmt->execute();
+                $user_id = $conn->lastInsertId();
 
+                if ($type == 'artisan') {
+                    $stmt = $conn->prepare("INSERT INTO Artisans (user_id) VALUES (?)");
+                    $stmt->execute([$user_id]);
+                }
+                
                 if ($stmt !== false) {
                     header("Location: login.php");
                     exit;
@@ -91,7 +92,6 @@
                     echo "Error: " . $sql . "<br>" . $errorInfo[2];
                 }
             }
-
         }
         ?>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

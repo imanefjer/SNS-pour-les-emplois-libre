@@ -20,26 +20,12 @@
             if (empty($email)) {
                 $emailError = "Veuillez entrer votre email";
             }
-            $type = $_POST['user'];
-            if ($type == "user"){
-                $stmt = $conn->prepare("SELECT password FROM users WHERE Email=$email ");
-                $stmt->bindParam(':email', $email);
-                $stmt->execute();
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+           
+            $stmt = $conn->prepare("SELECT password FROM Users WHERE email=$email ");
+            $stmt->bindParam(':email', $email);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
-
-                // $result = mysqli_query($conn, "SELECT password FROM User WHERE Email='$email' ");
-            }
-            else{
-                $stmt = $conn->prepare("SELECT password FROM artisans WHERE Email=$email ");
-                $stmt->bindParam(':email', $email);
-                $stmt->execute();
-                $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                
-            }
-    
             if ($row > 0 ) {
                 $user_row = $stmt->fetch(PDO::FETCH_ASSOC);
                 $hashed_password = $user_row;               
