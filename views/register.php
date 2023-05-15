@@ -5,9 +5,9 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../style/styleRegister.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="../css/styleRegister.css">
     <title>Register</title>
 </head>
 <body>
@@ -16,6 +16,16 @@
             <div class="form-value">
                 <form  method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
                     <h2 >Register</h2>
+                    <div class='inputbox'>
+                        <ion-icon name="person-outline"></ion-icon>
+                        <input type="text" name="firstname" id="firstname" required>
+                        <label for="firstname">First Name</label>
+                    </div>
+                    <div class='inputbox'>
+                        <ion-icon name="person-outline"></ion-icon>
+                        <input type="text" name="lastname" id="lastname" required>
+                        <label for="lastname">Last Name</label>
+                    </div>
                     <div class="inputbox">
                         <ion-icon name="id-card-outline"></ion-icon>
                         <input type="email" name="email"  id="email" required>
