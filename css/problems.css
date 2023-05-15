@@ -160,27 +160,23 @@
 
     
 }
-.pupup{
-    position:fixed;
-    top: 40%;
-    left:  50%;
-    transform: translate(-50%,-50%);
-    border: 1px solid black;
-    width:600px;
-    padding: 50px;
-    box-shadow: 0 5px 30px rgba(0,0,0,.30);
-    background: #d33131;
-   
-    opacity:0;
-    transition: 0.5s;
-    
-    
-    
+.pupup {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  border: 1px solid black;
+  width: 600px;
+  padding: 50px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.30);
+  background: #d33131;
+  opacity: 0;
+  transition: 0.5s;
 }
-#pop.active{
-    visibility: visible;
-    opacity: 0;
-    transition: 0.5s;
-    top:50%;
 
+#pop.active {
+  visibility: visible;
+  opacity: 1;
+  transition: 0.5s;
+  top: 50%;
 }
