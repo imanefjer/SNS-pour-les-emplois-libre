@@ -1,27 +1,14 @@
--- drop database
-DROP DATABASE IF EXISTS artisans;
--- create database
-CREATE DATABASE artisans;
--- use to database
-USE artisans;
--- create table
-
-CREATE TABLE Users (
-    user_id SERIAL PRIMARY KEY,
-    username VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255),
-    phone_number VARCHAR(20),
-    role ENUM('user', 'artisan')
-);
-CREATE TABLE Artisans (
-    artisan_id SERIAL PRIMARY KEY,
-    user_id INT,
-    company_name VARCHAR(255),
-    company_address VARCHAR(255),
-    description TEXT,
-    profile_picture VARCHAR(255),
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+-- Create artisans table
+CREATE TABLE IF NOT EXISTS artisans (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE Services (
     service_id SERIAL PRIMARY KEY,

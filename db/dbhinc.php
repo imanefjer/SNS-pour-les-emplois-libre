@@ -3,11 +3,11 @@
    $dbuser = 'root';
    $dbpass = '';
    $dbname = 'artisans';
-    try {
-         $conn = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
-         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-         
-    } catch (PDOException $e) {
-         echo "Connection failed: " . $e->getMessage();
-    }
+   $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+
+   if($mysqli->connect_errno ) {
+      printf("Connect failed: %s<br />", $mysqli->connect_error);
+      exit();
+   }
+   $mysqli->close();
 ?>
