@@ -5,10 +5,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <title>To Do</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../style/styleRegister.css">
-    <title>Register</title>
+    <link rel="stylesheet" href="../css/styleRegister.css">
+    <title>Log in</title>
 </head>
 <body>
     <section>
@@ -37,19 +38,6 @@
                         <input type="text" name="username" id="username" required>
                         <label for="username">Username</label>
                     </div>
-                    <div class="inputbox">
-                        <ion-icon name="person-outline"></ion-icon>
-                        <input type="text" name="phone" id="phone" required>
-                        <label for="phone">Phone Number</label>
-                    </div>
-                    <div>
-                        <!-- /check if it is artisan or a normal user -->
-                        <input type="radio" id="artisan" name="user" value="artisan">
-                        <label for="artisan">Artisan</label>
-                        <input type="radio" id="user" name="user" value="user" checked>
-                        <label for="user">User</label>
-                    </div>
-                    <span id = "error"></span>
                     <button type="submit" >Register</button>
                 </form>
             </div>
@@ -60,38 +48,24 @@
             $username = $_POST["username"];
             $email = $_POST["email"];
             $password = $_POST["psd"];
-            $type = $_POST['user'];
-            $phone = $_POST["phone"];
-            $error1 = '10';
+
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             // Check if the username or email already exists in the database             
-            $stmt = $conn->prepare("SELECT * FROM users WHERE username ='$username' OR email='$email'");
-            $stmt->execute();
-            $result = $stmt->fetchAll();
-            $rownum = $stmt->rowCount();
-            if ($rownum > 0) {
-                // Username or email already exists in the database, display error message
-                echo '<script>document.getElementById("error").innerHTML += "Username or email already exists.";</script>';
-                
-            } else {
-                $sql = "INSERT INTO Users (username, email, password, phone_number, role) VALUES ('$username', '$email', '$hashed_password', '$phone','$type')";
-                $stmt = $conn->prepare($sql);
-                $stmt->execute();
-                $user_id = $conn->lastInsertId();
+            $result = mysqli_query($conn, "SELECT * FROM User WHERE username='$username' OR email='$email'");
 
-                if ($type == 'artisan') {
-                    $stmt = $conn->prepare("INSERT INTO Artisans (user_id) VALUES (?)");
-                    $stmt->execute([$user_id]);
-                }
-                
-                if ($stmt !== false) {
+            if (mysqli_num_rows($result) > 0) {
+                // Username or email already exists in the database, display error message
+                echo "Username or email already exists, please try again with different credentials.";
+            } else {
+                $sql = "INSERT INTO User (username, email, password) VALUES ('$username', '$email', '$hashed_password')";
+                if (mysqli_query($conn, $sql)) {
                     header("Location: login.php");
                     exit;
                 } else {
-                    $errorInfo = $stmt->errorInfo();
-                    echo "Error: " . $sql . "<br>" . $errorInfo[2];
+                    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
                 }
             }
+
         }
         ?>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
