@@ -161,7 +161,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" href="./views/register.php">
                                     <button type="button" class="btn transparent">
-                                        nous rejoindre
+                                        Nous rejoindre
                                     </button>
                                     </a>
                                 </li>
@@ -180,7 +180,7 @@
                     </div>
                 </div>         
                 <p class="lead">
-                    <a  href="./views/register.php">nous rejoindre </a>
+                    <a  href="./views/register.php">Nous rejoindre </a>
                 </p>
             </div>       
         </div>
