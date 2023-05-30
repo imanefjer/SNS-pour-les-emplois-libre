@@ -6,11 +6,12 @@
 <html>
     <head>
         <link rel="shortcut icon" type="image/x-icon" href="./images/icon.ico" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
 
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>artisan</title>
+        <title>Artisan</title>
         <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -184,11 +185,101 @@
                 </p>
             </div>       
         </div>
-    
+        <div class = " container p-3">
+            <h1 class="p-4 text-secondary">Comment trouvez le bon artisan?</h1>
+            <div class="d-flex justify-content-between">
+                <div class="p-3">
+                    <h3 class ="beige">Définir vos besoins </h3>
+                    <p>
+                    Identifiez clairement le type d'artisan dont vous avez besoin et les compétences ou services 
+                    spécifiques requis pour votre projet.
+                    </p>
+                </div>
+                <div class="p-3">
+                    <h3  class ="beige">Recherchez des artisans </h3>
+                    <p>
+                    Recherchez des artisans dans votre région et consultez leurs profils pour voir leurs qualifications, 
+                    leurs photos de projets et leurs avis clients.
+                    </p>
+                </div>
+                <div class="p-3">
+                    <h3  class ="beige">Contacter les artisans </h3>
+                    <p>
+                    Contactez les artisans qui vous intéressent et discutez de votre projet avec eux. 
+                    Vous pouvez également consulter leurs profils pour voir leurs qualifications, leurs photos de projets et leurs avis clients.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class=" bg-light">
+            <div class="container p-3 ">
+                <h2 class="mx-4">Ces commentaires expriment mieux les choses.</h2>
+                
+                <div id="reviews-container " class="carousel slide mg" data-ride="carousel">
+                    <div class="carousel-inner ">
+                    <div class="carousel-item active">
+                        <h3>John Doe</h3>
+                        <p>Site web fantastique ! Très convivial et bien organisé. J'ai trouvé facilement ce dont j'avais besoin et les résultats ont dépassé mes attentes. Hautement recommandé !</p>
+                    </div>
+                    <div class="carousel-item">
+                        <h3>Jane Smith</h3>
+                        <p>Cette plateforme est incroyable ! Elle est très facile à utiliser et offre une grande variété d'artisans talentueux. J'ai pu trouver rapidement celui qui correspondait à mes besoins. Je suis vraiment satisfait de mon expérience.</p>
+                    </div>
+                    <div class="carousel-item">
+                        <h3>David Johnson</h3>
+                        <p>Je suis impressionné par ce site web. La qualité du service est exceptionnelle et j'ai reçu des résultats de grande qualité dans les délais promis. Je le recommande vivement à tous ceux qui cherchent à trouver le bon artisan pour leurs projets.</p>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+    <footer class=" container py-5 me-5">
+        <div class="row">
+            <div class="col-6 col-md">
+                <ul class="list-unstyled text-small ">
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Besoin d'aide</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Contactez-nous</a>  
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">FAQ</a>  
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <ul class="list-unstyled text-small">
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Qui sommes-nous</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Termes et conditions</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Politique de confidentialité</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="  bt b-gray-300">
+            <a href="/" class=" text-dark">
+                <div>© 2023 Artisan, Inc.</div>
+            </a>
+        </div>
+    
+    </footer>
            
             
-            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+        <script>
+            $(document).ready(function() {
+            $('.carousel').carousel();
+            });
+        </script>
        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

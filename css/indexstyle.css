@@ -6,12 +6,11 @@
 }
 body,html{
     height: 100%;
-    /* width: 100%; */
     margin: 0;
     padding: 0;
-    /* background: #e74c3c !important; */
 
-    }
+}
+
 .im{
     background-image: url("../images/entete.jpg");
     height: 600px;
@@ -25,6 +24,7 @@ body,html{
     border-color: black; 
     border-radius: 15px;
 }
+
 .btn{
     color: white;
     border-radius:15px ;
@@ -83,4 +83,21 @@ a,a:hover{
 .lead{
     color: white;
     padding-top: 10%;
+}
+
+.beige{
+    color: #c6bdb6;
+}
+.mg{
+    height: 180px;
+    width: 500px;
+    margin-left:30%;
+    margin-top: 60px;
+    background-color: white;
+    border: 1px;
+    border-radius: 15px;
+    padding: 10px;
+}
+.mg h3{
+    color:#c6bdb6;
 }
