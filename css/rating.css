@@ -29,7 +29,7 @@ html,body{
 }
 .container .text{
   font-size: 25px;
-  color: #4a83d7;
+  color: rgba(63,48,69,1);
   font-weight: 500;
 }
 .container .edit{
@@ -37,7 +37,7 @@ html,body{
   right: 10px;
   top: 5px;
   font-size: 16px;
-  color: #6854db;
+  color: rgba(179,173,161,1);
   font-weight: 500;
   cursor: pointer;
 }
@@ -127,7 +127,7 @@ form .btn button{
   width: 100%;
   border: 1px solid #f6f6f6;
   outline: none;
-  background: #6854db;
+  background: rgba(179,173,161,1);
   color: #fbf3f3;
   font-size: 17px;
   font-weight: 500;

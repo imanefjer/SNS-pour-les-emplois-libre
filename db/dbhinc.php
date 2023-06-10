@@ -9,5 +9,4 @@
       printf("Connect failed: %s<br />", $mysqli->connect_error);
       exit();
    }
-   $mysqli->close();
 ?>

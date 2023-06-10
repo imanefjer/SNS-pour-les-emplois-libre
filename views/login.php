@@ -1,5 +1,5 @@
 <?php
-    include_once '../db/dbhinc.php';
+    include '../db/dbhinc.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -32,7 +32,7 @@
                     session_start();
                     $_SESSION["USER_ID"] = $userId;
                     $_SESSION["USER_NAME"] = $username;                            
-                    header("location: index1.php");
+                    header("location: user_dashboard.php");
                 } else {
                     $error = "Invalid password.";
 
