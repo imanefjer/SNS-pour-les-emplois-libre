@@ -49,7 +49,7 @@
                         header("location: artisan_dashboard.php");
                     }
                     else{
-                        header("location: user_dashboard.php");
+                        header("location: /index.php");
                     }                         
                     
                 } else {

@@ -29,7 +29,7 @@ $result2 = mysqli_query($conn, $sql2);
 $row2 = mysqli_fetch_assoc($result2);
 $artisan_username = $row2['username'];
 $artisan_password = $row2['password'];
-$artisan_image = $row2['phone_number'];
+$artisan_num = $row2['phone_number'];
 $email= $row2['email'];
 $sql3= "SELECT * FROM artisan_services WHERE artisan_id = '$id';";
 $result3 = mysqli_query($conn, $sql3);
@@ -233,7 +233,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="/logout.php">
+                                    <a class="nav-link text-dark" href="logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>
@@ -263,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone:</label>
-                    <input type="tel" class="form-control" id="phone" name ="phone" value="<?php echo $artisan_image; ?>" disabled>
+                    <input type="tel" class="form-control" id="phone" name ="phone" value="<?php echo $artisan_num; ?>" disabled>
                 </div>
                 <div class="form-group">
                     <label for="address">Address:</label>

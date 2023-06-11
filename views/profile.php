@@ -1,4 +1,5 @@
 <?php
+include_once '../db/dbhinc.php';
 session_start();
 $logout="false";
 $connexion = "true";
@@ -7,24 +8,67 @@ if(isset($_SESSION["USER_NAME"])){
   $connexion = "false";
 
 }
+if (!isset($_SESSION['USER_NAME'])) {
+    header("Location: ../index.php");
+ }
+ else{
+    if($_SESSION['ROLE'] != "client"){
+        header("Location: artisan_profile.php");
+    }
+ }
+$id = $_SESSION['USER_ID'];
+$sql2 = "SELECT * FROM users WHERE user_id = '$id';";
+$result2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_assoc($result2);
+$num = $row2['phone_number'];
+$email= $row2['email'];
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $sql2 = "UPDATE users SET 
+                email = '$email',
+                phone_number = '$phone'
+            WHERE user_id = '$id';";
+    $result = mysqli_query($conn, $sql2);
+    header("Location: ".$_SERVER['PHP_SELF']);      
+}
+
 ?>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<html>
+    <head>
+        <link rel="shortcut icon" type="image/x-icon" href="./images/icon.ico" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
 
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Profile</title>
+        <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+        crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="stylesheet" href="../css/profile.css">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="style" href="../css/user_dashboard.css">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
+    </head>
     <body>
-        <header>
+        <div class="im">
+            <header>
                 <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong mb-4 ">
                     <div class="container">
-                        <a class="navbar-brand" href="./index.php">
+                        <a class="navbar-brand" href="../index.php">
                             <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                             width="134.000000pt" height="30.000000pt" viewBox="0 0 268.000000 100.000000"
                             preserveAspectRatio="xMidYMid meet">
@@ -131,60 +175,105 @@ if(isset($_SESSION["USER_NAME"])){
                             </g>
                             </svg>
                         </a>
+                        <div class="collapse navbar-collapse justify-content-space_between" id="navbarText">
                         <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
-                              <?php
-                                if($logout == "true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="logout.php">
-                                        <button type="button" class="btn transparent">
-                                            Profile
-                                        </button>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="artisan_dashboard.php">
+                                            <button type="button" class="btn transparent">
+                                                Home
+                                            </button>
                                     </a>
-                                    </li>';
-                                    echo '<li class="nav-item">
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" href="logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>
-                                    </a> </li>';
-                                }
-                                if($connexion =="true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="login.php">
-                                        <button type="button" class="btn transparent">
-                                            Connexion
-                                        </button>
-                                    </a> </li>';
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="register.php">
-                                        <button type="button" class="btn transparent">
-                                            Inscription
-                                        </button>
-                                    </a> </li>';
-                                }
-                              ?>
-                      
-      
+                                    </a>
+                                </li>
                             </ul>
+                        </div>
                         </div>
                     </div>
                 </nav>
-        <nav>
-          <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Analytics</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Settings</a></li>
-          </ul>
-        </nav>
+            </header>
         <main>
-          <!-- Dashboard content goes here -->
-        </main>
-        <footer>
-          <p>&copy; 2023 Your Company</p>
-        </footer>
-      </body>
-      </html>
-</body>
+        <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h3>Profile</h3>
+            </div>
+            <div class="card-body">
+            <form  method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email"value="<?php echo $email; ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" class="form-control" id="phone" name ="phone" value="<?php echo $num; ?>" disabled>
+                </div>
+                
+                    <button type="button" class="btn btn-black " id="updateBtn" onclick="enableProfileFields()">Update Profile</button>
+                    <button type="submit" class="btn btn-primary " id="saveBtn" style="display: none;">Save Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    </main>
+    <footer class=" container py-5 me-5">
+        <div class="row">
+            <div class="col-6 col-md">
+                <ul class="list-unstyled text-small ">
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Besoin d'aide</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Contactez-nous</a>  
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">FAQ</a>  
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <ul class="list-unstyled text-small">
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Qui sommes-nous</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Termes et conditions</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Politique de confidentialité</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="  bt b-gray-300">
+            <a href="/" class=" text-dark">
+                <div>© 2023 Artisan, Inc.</div>
+            </a>
+        </div>
+    
+    </footer>
+    <script>
+        function enableProfileFields() {
+            var emailInput = document.getElementById('email');
+            var updateBtn = document.getElementById('updateBtn');
+            var saveBtn = document.getElementById('saveBtn');
+            var phoneInput =document.getElementById('phone');
+          
+            emailInput.disabled = false;
+            phoneInput.disabled = false;
+           
+            updateBtn.style.display = 'none';
+            saveBtn.style.display = 'block';
+        }
+    </script>
+    </body>
 </html>

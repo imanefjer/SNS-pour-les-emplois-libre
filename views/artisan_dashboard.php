@@ -241,6 +241,7 @@ if (!isset($_SESSION['USER_NAME'])) {
                     <!-- button see you requests -->
                     <a href="artisan_requests.php">
                         <button type="button" class="btn btn-primary m-3">See Requests</button>
+                    </a>
                 </div>
                 <div>
                     <h4>Messages</h4>
