@@ -10,6 +10,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
 }
 session_start();
 
+
 $logout="false";
 $connexion = "true";
 if(isset($_SESSION["USER_NAME"])){
@@ -181,7 +182,7 @@ if(isset($_SESSION["USER_NAME"])){
                                     </a>
                                     </li>';
                                     echo '<li class="nav-item itme">
-                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                    <a class="nav-link text-dark" href="logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>

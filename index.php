@@ -1,9 +1,10 @@
 <?php
     session_start();
 
-$logout="true";
+$logout="false";
 $connexion = "true";
 if(isset($_SESSION["USER_NAME"])){
+  
   $logout ="false";
   $connexion = "true";
 
@@ -168,7 +169,7 @@ if(isset($_SESSION["USER_NAME"])){
                                 <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
                               <?php
-                                if($logout == "false"){
+                                if($logout == "true"){
                                     echo '<li class="nav-item">
                                     <a class="nav-link text-dark" href="./views/logout.php">
                                         <button type="button" class="btn transparent">

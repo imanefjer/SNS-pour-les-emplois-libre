@@ -4,7 +4,7 @@ $logout="false";
 $connexion = "true";
 if(isset($_SESSION["USER_NAME"])){
   $logout ="true";
-  $connexion = "fzlse";
+  $connexion = "false";
 
 }
 ?>
@@ -136,14 +136,14 @@ if(isset($_SESSION["USER_NAME"])){
                               <?php
                                 if($logout == "true"){
                                     echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                    <a class="nav-link text-dark" href="logout.php">
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
                                     </a>
                                     </li>';
                                     echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                    <a class="nav-link text-dark" href="logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>
@@ -151,13 +151,13 @@ if(isset($_SESSION["USER_NAME"])){
                                 }
                                 if($connexion =="true"){
                                     echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/login.php">
+                                    <a class="nav-link text-dark" href="login.php">
                                         <button type="button" class="btn transparent">
                                             Connexion
                                         </button>
                                     </a> </li>';
                                     echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/register.php">
+                                    <a class="nav-link text-dark" href="register.php">
                                         <button type="button" class="btn transparent">
                                             Inscription
                                         </button>
