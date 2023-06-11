@@ -470,7 +470,8 @@ $connexion = "false";
           </div>
 
           <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
-          <form action="php_details.php" method="post" role="form" class="php-email-form">
+          <form name="test" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+
   <h1>Send me a message</h1>
   <div class="row"></div>
   <div class="form-group">
@@ -482,12 +483,30 @@ $connexion = "false";
     <textarea class="form-control" name="message" rows="10" required></textarea>
   </div>
   <div class="my-3">
-    <div class="loading">Loading</div>
-    <div class="error-message"></div>
-    <div class="sent-message">Your message has been sent. Thank you!</div>
+    
+   
   </div>
   <div class="text-center"><button type="submit" name="send-message">Send Message</button></div>
 </form>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $subject = $_POST['subject'];
+  $message = $_POST['message'];
+  $user_id = $_SESSION['USER_ID'];
+  $date_sent = date('Y-m-d H:i:s');
+  
+  $query = "INSERT INTO Messages (user_id, artisan_id, message_text, date_sent)
+            VALUES ('$user_id', '{$artisan['artisan_id']}', '$message', '$date_sent')";
+          
+  
+  if (mysqli_query($conn, $query)) {
+    echo "<div class='alert alert-success'>Your message has been sent. Thank you!</div>";
+  } 
+}
+?>
+
+
 
 
 

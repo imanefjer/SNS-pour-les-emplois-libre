@@ -74,7 +74,7 @@
           <section>
         <div class="form-box">
             <div class="form-value">
-                <form  method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                <form  method="POST" action="php_details.php">
                     <h2 >Login</h2>
                     <div class="inputbox">
                         <ion-icon name="id-card-outline"></ion-icon>
