@@ -5,7 +5,7 @@ $logout="true";
 $connexion = "true";
 if(isset($_SESSION["USER_NAME"])){
   $logout ="false";
-  $connexion = "false";
+  $connexion = "true";
 
 }
 ?>

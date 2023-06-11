@@ -1,6 +1,8 @@
 <?php
   include '../db/dbhinc.php';
-
+  //if (!isset($_SESSION['USER_NAME'])) {
+  //  header("Location: ../../index.php");
+//}
    // Retrieve artisan's information
    $artisanId = 3; // Replace with the specific artisan's ID
    $query = "SELECT * FROM Artisans JOIN Users ON Users.user_id = Artisans.artisan_id
