@@ -66,14 +66,14 @@
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
         // Check if the username or email already exists in the database
-        $result = mysqli_query($mysqli, "SELECT * FROM users WHERE username='$username' OR email='$email'");
+        $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' OR email='$email'");
         
         if (mysqli_num_rows($result) > 0) {
             // Username or email already exists in the database, display error message
             echo "Username or email already exists, please try again with different credentials.";
         } else {
             $sql = "INSERT INTO users (username, email, password, phone_number, role) VALUES ('$username', '$email', '$hashed_password', '$phone_number', '$role')";
-            if (mysqli_query($mysqli, $sql)) {
+            if (mysqli_query($conn, $sql)) {
                if ($role == 'artisan'){
                     session_start();
                     $_SESSION["USER_EMAIL"] = $email;
@@ -92,7 +92,7 @@
                 }
                 
             } else {
-                echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
             }
         }
     }

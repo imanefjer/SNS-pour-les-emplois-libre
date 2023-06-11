@@ -15,16 +15,19 @@
         $email = "";
         $emailError = $psdError = "";
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $email = mysqli_real_escape_string($mysqli, $_POST['email']);
-            $psd = mysqli_real_escape_string($mysqli, $_POST['psd']);
+            $email = mysqli_real_escape_string($conn, $_POST['email']);
+            $psd = mysqli_real_escape_string($conn, $_POST['psd']);
             if (empty($email)) {
                 $emailError = "Veuillez entrer votre email";
             }
-            if (!$mysqli) {
+            if (!$conn) {
                 die("Connection failed: " . mysqli_connect_error());
             }
-            $result = mysqli_query($mysqli, "SELECT * FROM userss WHERE email='$email' ");
-    
+            $result = mysqli_query($conn, "SELECT * FROM users WHERE email='$email' ");
+            if ($result === false) {
+                die('Query error: ' . mysqli_error($conn));
+            }
+            
             if (mysqli_num_rows($result) > 0) {
                 $user_row = mysqli_fetch_assoc($result);
                 $hashed_password = $user_row['password'];   

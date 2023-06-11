@@ -19,17 +19,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (move_uploaded_file($tempFilePath, $destination)) {
     // Check if the username or email already exists in the database
-    $result = mysqli_query($mysqli, "SELECT user_id FROM users WHERE username='" . $_SESSION['USER_NAME'] . "'");
+    $result = mysqli_query($conn, "SELECT user_id FROM users WHERE username='" . $_SESSION['USER_NAME'] . "'");
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
         $user_id = $row['user_id'];
 
         $sql = "INSERT INTO artisans (artisan_id, company_name, company_address, description, profile_picture) VALUES ('$user_id', '$company_name', '$company_ad', '$desc', '$destination')";
-        if (mysqli_query($mysqli, $sql)) {
+        if (mysqli_query($conn, $sql)) {
             header("location: user_dashboard.php");
             exit;
         } else {
-            echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
     }
 }}}
