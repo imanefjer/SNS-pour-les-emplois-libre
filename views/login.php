@@ -1,5 +1,9 @@
 <?php
     include '../db/dbhinc.php';
+    if (isset($_SESSION['USER_NAME'])) {
+        header("Location: ../index.php");
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -36,7 +40,8 @@
                    {
                     session_start();
                     $_SESSION["USER_ID"] = $userId;
-                    $_SESSION["USER_NAME"] = $username;                            
+                    $_SESSION["USER_NAME"] = $username;   
+                    $_SESSION["ROLE"] = " ";                         
                     header("location: user_dashboard.php");}
                     
                 } else {

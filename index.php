@@ -180,7 +180,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="searchbar">
                     <input class="search_input" type="text" name="search" placeholder="Search...">
-                    <input type="submit" name="envoyer" class="btn btn-dark ">
+                    <input type="submit" name="envoyer" class="btn btn-dark " value="search">
                     </div>
                 </div>         
             </form>

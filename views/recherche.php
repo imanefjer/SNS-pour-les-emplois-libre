@@ -157,7 +157,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                                             <label for="search">
                                             <input type="search" name="search" placeholder="service">
                                             </label>
-                                            <input type="submit" name="envoyer" class=" btn-dark ">
+                                            <input type="submit" name="envoyer" class=" btn-dark " value ="search">
                                         </div>
                                     </form>
                                 </div>
@@ -188,7 +188,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                 <?php
                     }
                 } else {
-                    echo "<h4>aucun utilisateur trouver</h4>";
+                    echo "<h4>Aucun service trouvé.</h4>";
                 }
 
                 ?>
