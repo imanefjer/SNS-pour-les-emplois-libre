@@ -196,6 +196,7 @@ if (!isset($_SESSION['USER_NAME'])) {
                         $aid = $_SESSION['USER_ID'];
                         $sql = "SELECT * FROM requests WHERE artisan_id = '$aid' and status NOT LIKE 'accepted'";
                         $result = mysqli_query($conn,$sql);
+                        if ($result !== false){
                         if ($result->num_rows > 0) {
                     ?>
                     <h3>Requests</h3>
@@ -236,7 +237,7 @@ if (!isset($_SESSION['USER_NAME'])) {
                                         echo "<td><a class='btn btn-primary' href='accept_request.php?request_id=".$row['request_id']."'>Accept</a></td>";
                                         echo "</tr>";
                                     }
-                                } 
+                                } }
                                 else{
                                     echo "<h4 style='min-height:60vh'>You don't have any requests in this time</h4>";
                                 }

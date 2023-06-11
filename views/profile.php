@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="artisan_dashboard.php">
+                                    <a class="nav-link text-dark" href="../index.php">
                                             <button type="button" class="btn transparent">
                                                 Home
                                             </button>
