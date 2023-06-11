@@ -218,11 +218,16 @@ if(isset($_SESSION["USER_NAME"])){
                     </div>
                 </div>         
             </form>
-                <p class="lead">
-                    <a  href="./views/register.php" class="insc">Inscription </a>
-                    
-                    <a  href="./views/login.php" class="connex">Connexion </a>
-                </p>
+            <?php
+            if ($connexion =="true"){
+                echo'<p class="lead">
+                <a  href="./views/register.php" class="insc">Inscription </a>
+                
+                <a  href="./views/login.php" class="connex">Connexion </a>
+            </p>';
+            }
+            ?>
+                
             </div>       
         </div>
         <div class = " container p-3">
