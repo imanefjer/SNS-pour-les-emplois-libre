@@ -23,11 +23,11 @@
             if (!$conn) {
                 die("Connection failed: " . mysqli_connect_error());
             }
-            $result = mysqli_query($conn, "SELECT * FROM User WHERE Email='$email' ");
+            $result = mysqli_query($conn, "SELECT * FROM Users WHERE Email='$email' ");
     
             if (mysqli_num_rows($result) > 0) {
                 $user_row = mysqli_fetch_assoc($result);
-                $hashed_password = $user_row['Password'];               
+                $hashed_password = $user_row['psd'];               
                 if (password_verify($psd, $hashed_password)) {
                     session_start();
                     $_SESSION["USER_ID"] = $userId;

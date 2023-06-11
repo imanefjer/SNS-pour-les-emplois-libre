@@ -1,0 +1,16 @@
+.login-form {
+    width: 340px;
+    margin: 50px auto;
+  }
+  
+  .affichage_utilisateur {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  p {
+    width: auto;
+  }

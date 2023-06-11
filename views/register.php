@@ -60,13 +60,13 @@
 
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             // Check if the username or email already exists in the database             
-            $result = mysqli_query($conn, "SELECT * FROM User WHERE username='$username' OR email='$email'");
+            $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' OR email='$email'");
 
             if (mysqli_num_rows($result) > 0) {
                 // Username or email already exists in the database, display error message
                 echo "Username or email already exists, please try again with different credentials.";
             } else {
-                $sql = "INSERT INTO User (username, email, password) VALUES ('$username', '$email', '$hashed_password')";
+                $sql = "INSERT INTO users (username, email, psd) VALUES ('$username', '$email', '$hashed_password')";
                 if (mysqli_query($conn, $sql)) {
                     header("Location: login.php");
                     exit;
