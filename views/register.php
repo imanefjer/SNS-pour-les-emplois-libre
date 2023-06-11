@@ -1,5 +1,10 @@
 <?php
     include '../db/dbhinc.php';
+    session_start();
+    if (isset($_SESSION['USER_NAME'])) {
+        header("Location: ../index.php");
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -11,6 +16,51 @@
     <title>Register</title>
 </head>
 <body>
+<?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $username = $_POST["username"];
+        $email = $_POST["email"];
+        $password = $_POST["psd"];
+        $phone_number = $_POST["phone_number"];
+        $role = $_POST["role"];
+        $error ="";
+
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        
+        // Check if the username or email already exists in the database
+        $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' OR email='$email'");
+        
+        if (mysqli_num_rows($result) > 0) {
+            // Username or email already exists in the database, display error message
+            $error= "Username or email already exists";
+        } else {
+            $sql = "INSERT INTO users (username, email, password, phone_number, role) VALUES ('$username', '$email', '$hashed_password', '$phone_number', '$role')";
+            if (mysqli_query($conn, $sql)) {
+               if ($role == 'artisan'){
+                    session_start();
+                    $_SESSION["USER_EMAIL"] = $email;
+                    $_SESSION["USER_ID"] = $userId;
+                $_SESSION["USER_NAME"] = $username; 
+                $_SESSION["ROLE"] = $role;                              
+                header("location: artisan_login.php");
+                exit;
+                }
+                else if($role == 'client'){
+                    session_start();
+                    $_SESSION["USER_EMAIL"] = $email;
+                    $_SESSION["USER_ID"] = $userId;
+                $_SESSION["USER_NAME"] = $username; 
+                $_SESSION["ROLE"] = $role;                           
+                header("location: ../index.php");
+                exit;
+                }
+                
+            } else {
+                $error= "Error: " . $sql . "<br>" . mysqli_error($conn);
+            }
+        }
+    }
+?>
     <section>
     <div class="form-box">
     <div class="form-value">
@@ -42,7 +92,11 @@
                 <input type="password" name="psd-repeat" id="psw-repeat" required>
                 <label for="psw-repeat">Repeat Password</label>
             </div>
+            
             <div class="inputbox">
+                    <?php if(isset($error)) { ?>
+                            <span><?php echo $error; ?></span>
+                    <?php } ?>
                 <ion-icon name="person-outline"></ion-icon>
                 <label for="user-type">Select user type:</label><br><br>
                 <select id="role" name="role">
@@ -50,53 +104,13 @@
                     <option value="client">Client</option>
                 </select>
             </div>
+            
             <button type="submit">Register</button>
         </form>
     </div>
 </div>
 
-<?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $username = $_POST["username"];
-        $email = $_POST["email"];
-        $password = $_POST["psd"];
-        $phone_number = $_POST["phone_number"];
-        $role = $_POST["role"];
 
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        
-        // Check if the username or email already exists in the database
-        $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' OR email='$email'");
-        
-        if (mysqli_num_rows($result) > 0) {
-            // Username or email already exists in the database, display error message
-            echo "Username or email already exists, please try again with different credentials.";
-        } else {
-            $sql = "INSERT INTO users (username, email, password, phone_number, role) VALUES ('$username', '$email', '$hashed_password', '$phone_number', '$role')";
-            if (mysqli_query($conn, $sql)) {
-               if ($role == 'artisan'){
-                    session_start();
-                    $_SESSION["USER_EMAIL"] = $email;
-                    $_SESSION["USER_ID"] = $userId;
-                $_SESSION["USER_NAME"] = $username;                            
-                header("location: artisan_login.php");
-                exit;
-                }
-                else if($role == 'client'){
-                    session_start();
-                    $_SESSION["USER_EMAIL"] = $email;
-                    $_SESSION["USER_ID"] = $userId;
-                $_SESSION["USER_NAME"] = $username;                            
-                header("location: ../index.php");
-                exit;
-                }
-                
-            } else {
-                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-            }
-        }
-    }
-?>
 
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

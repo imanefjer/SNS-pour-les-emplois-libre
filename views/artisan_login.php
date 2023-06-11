@@ -1,13 +1,21 @@
 <?php
 include '../db/dbhinc.php';
 session_start();
-
+if (isset($_SESSION['USER_NAME']) && isset($_SESSION["ROLE"])) {
+    if ($_SESSION["role"] == "artisan" && isset($_SESSION["INFO"])) {
+        header("Location: user_dashboard.php");
+    } 
+    if($_SESSION["ROLE"] ="client"){
+        header("Location: user_dashboard.php");
+    }
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $company_name = $_POST["company_name"];
     $company_ad = $_POST["company_ad"];
     $desc = $_POST["desc"];
     $destination = '';
+    $error ="";
     if (isset($_FILES["profile_picture"]) && $_FILES["profile_picture"]["error"] === UPLOAD_ERR_OK) {
         $tempFilePath = $_FILES["profile_picture"]["tmp_name"];
         $fileName = $_FILES["profile_picture"]["name"];
@@ -26,10 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $sql = "INSERT INTO artisans (artisan_id, company_name, company_address, description, profile_picture) VALUES ('$user_id', '$company_name', '$company_ad', '$desc', '$destination')";
         if (mysqli_query($conn, $sql)) {
+            $_SESSION["INFO"] = "true";
             header("location: user_dashboard.php");
             exit;
         } else {
-            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+            $error = "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
     }
 }}}
@@ -48,13 +57,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="form-box">
             <div class="form-value">
                 <form enctype="multipart/form-data"  method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
-                    <h2 >Login</h2>
+                    <h2 >Details</h2>
                     <div class="inputbox">
                         <input type="text" name="company_name"  id="company_name" required>
                         <label for="company_name">Company Name</label>
                     </div>
                     <div class="inputbox">
-                        <input type="text" name="company_ad"  id="company_ad" required>
+                        <input type="number" name="company_ad"  id="company_ad" placeholder="zipcode"required>
                         <label for="company_ad">Company Adress</label>
                     </div>
                     <div class="inputbox">

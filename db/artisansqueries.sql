@@ -16,7 +16,7 @@ CREATE TABLE Artisans (
 );
 
 CREATE TABLE Services (
-  service_id INT PRIMARY KEY,
+  service_id INT PRIMARY KEY AUTO_INCREMENT,
   service_name VARCHAR(255),
   service_description TEXT
 );

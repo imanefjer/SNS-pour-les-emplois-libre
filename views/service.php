@@ -1,5 +1,14 @@
 <?php
 include_once '../db/dbhinc.php';
+session_start();
+$logout="false";
+$connexion = "true";
+if(isset($_SESSION["USER_NAME"])){
+  $logout ="true";
+  $connexion = "false";
+
+}
+
 ?>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -140,15 +149,43 @@ include_once '../db/dbhinc.php';
                             </svg>
                         </a>
                         <div class="collapse navbar-collapse justify-content-space_between" id="navbarText">
+                        <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
-                                <li class="nav-item itme">
-                                    <a class="nav-link text-dark" href="./views/profile.php">
-                                        <button type="button" class="btn ">
+                              <?php
+                                if($logout == "true"){
+                                    echo '<li class="nav-item">
+                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                        <button type="button" class="btn transparent">
                                             Profile
                                         </button>
                                     </a>
-                                </li>
+                                    </li>';
+                                    echo '<li class="nav-item">
+                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                        <button type="button" class="btn transparent">
+                                            logout
+                                        </button>
+                                    </a> </li>';
+                                }
+                                else{
+                                    echo '<li class="nav-item">
+                                    <a class="nav-link text-dark" href="./views/login.php">
+                                        <button type="button" class="btn transparent">
+                                            Connexion
+                                        </button>
+                                    </a> </li>';
+                                    echo '<li class="nav-item">
+                                    <a class="nav-link text-dark" href="./views/register.php">
+                                        <button type="button" class="btn transparent">
+                                            Inscription
+                                        </button>
+                                    </a> </li>';
+                                }
+                              ?>
+                      
+      
                             </ul>
+                        </div>
                         </div>
                     </div>
                 </nav>
