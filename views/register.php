@@ -74,8 +74,23 @@
         } else {
             $sql = "INSERT INTO users (username, email, password, phone_number, role) VALUES ('$username', '$email', '$hashed_password', '$phone_number', '$role')";
             if (mysqli_query($mysqli, $sql)) {
-                header("Location: user_dashboard.php");
+               if ($role == 'artisan'){
+                    session_start();
+                    $_SESSION["USER_EMAIL"] = $email;
+                    $_SESSION["USER_ID"] = $userId;
+                $_SESSION["USER_NAME"] = $username;                            
+                header("location: artisan_login.php");
                 exit;
+                }
+                else if($role == 'client'){
+                    session_start();
+                    $_SESSION["USER_EMAIL"] = $email;
+                    $_SESSION["USER_ID"] = $userId;
+                $_SESSION["USER_NAME"] = $username;                            
+                header("location: artisan_login.php");
+                exit;
+                }
+                
             } else {
                 echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
             }
