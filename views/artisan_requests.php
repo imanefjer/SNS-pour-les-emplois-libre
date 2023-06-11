@@ -167,23 +167,20 @@ if (!isset($_SESSION['USER_NAME'])) {
                                             </button>
                                     </a>
                                 </li>
-                              <?php
-                                
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="/logout.php">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="/profile.php">
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
                                     </a>
-                                    </li>';
-                                    echo '<li class="nav-item">
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" href="/logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>
-                                    </a> </li>';
-                               
-                              ?>
+                                    </a>
+                                </li>
                       
       
                             </ul>

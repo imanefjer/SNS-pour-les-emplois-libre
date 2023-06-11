@@ -16,15 +16,72 @@ if (!isset($_SESSION['USER_NAME'])) {
         header("Location: index.php");
     }
  }
- if(isset($_GET['request_id'])) {
-    $requestId = $_GET['request_id'];
-    $stmt = $conn->prepare("UPDATE requests SET status = ? WHERE request_id = '$requestId'");
-    $stmt->bind_param('s', $status);
+$id = $_SESSION['USER_ID'];
+$sql = "SELECT * FROM artisans WHERE artisan_id = '$id';";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$cname = $row['company_name'];
+$caddress = $row['company_address'];
+$desc = $row['description'];
+$image = $row["profile_picture"];
+$sql2 = "SELECT * FROM users WHERE user_id = '$id';";
+$result2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_assoc($result2);
+$artisan_username = $row2['username'];
+$artisan_password = $row2['password'];
+$artisan_image = $row2['phone_number'];
+$email= $row2['email'];
+$sql3= "SELECT * FROM artisan_services WHERE artisan_id = '$id';";
+$result3 = mysqli_query($conn, $sql3);
+
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
-    $status = 'Accepted';
-    $requestId = $_GET['request_id'];
-    $stmt->execute();
-} 
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+    $cname = $_POST['cname'];
+    $destination = '';
+    $description ="";
+    // if (isset($_FILES["photo"]) && $_FILES["photo"]["error"] === UPLOAD_ERR_OK) {
+    //     $tempFilePath = $_FILES["photo"]["tmp_name"];
+    //     $fileName = $_FILES["photo"]["name"];
+    //     $destination = "../images/" . $fileName;
+    //     echo $description;
+    //     if (move_uploaded_file($tempFilePath, $destination)) {
+    //         $sql = "UPDATE artisans SET profile_picture = '$destination' WHERE artisan_id = '$id';";
+    //         $result = mysqli_query($conn, $sql);
+    //     }
+    //     }
+    if (isset($_POST['description'])) {
+        $description = $_POST['description'];
+        
+    }
+    $sql1 = "UPDATE artisans SET 
+                company_name = '$cname',
+                company_address = '$address',
+                description = '$description'
+            WHERE artisan_id = '$id';";
+
+    $result = mysqli_query($conn, $sql1);
+    $sql2 = "UPDATE users SET 
+                email = '$email',
+                phone_number = '$phone',
+            WHERE user_id = '$id';";
+    $result = mysqli_query($conn, $sql2);
+    if (isset($_POST['select'])) {
+        $selectedService = $_POST['select'];
+        if (!empty($selectedService)) {
+            $sqlInsert = "INSERT INTO artisan_services (artisan_id, service_id) VALUES ('$id', '$selectedService');";
+            $resultInsert = mysqli_query($conn, $sqlInsert);
+        }
+    }
+    header("Location: ".$_SERVER['PHP_SELF']);
+
+    
+      
+}
 
 ?>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -50,7 +107,7 @@ if (!isset($_SESSION['USER_NAME'])) {
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <link rel="stylesheet" href="../css/service.css">
+        <link rel="stylesheet" href="../css/profile.css">
 
     </head>
     <body>
@@ -168,24 +225,20 @@ if (!isset($_SESSION['USER_NAME'])) {
                         <div class="collapse navbar-collapse justify-content-space_between" id="navbarText">
                         <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
-                              <?php
-                            
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="artisan_profile.php">
-                                        <button type="button" class="btn transparent">
-                                            Profile
-                                        </button>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="artisan_dashboard.php">
+                                            <button type="button" class="btn transparent">
+                                                Home
+                                            </button>
                                     </a>
-                                    </li>';
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="logout.php">
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="/logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>
-                                    </a> </li>';
-                              ?>
-                      
-      
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         </div>
@@ -193,87 +246,92 @@ if (!isset($_SESSION['USER_NAME'])) {
                 </nav>
             </header>
         <main>
-            <div class="container ">
-                <div>
-                    <h3>Orders</h3>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Date</th>
-                                <th scope="col">User</th>
-                                <th scope="col">Service</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Location</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $aid = $_SESSION['USER_ID'];
-                                $sql = "SELECT * FROM requests WHERE artisan_id = '$aid'";
-                                $result = mysqli_query($conn,$sql);
-                                if ($result->num_rows > 0) {
-                                    while($row = $result->fetch_assoc()) {
-                                        echo "<tr>";
-                                        echo "<td>".$row['date_requested']."</td>";
-                                        // echo "<td>".$row['user_id']."</td>";
-                                        $uid = $row['user_id'];
-                                        $sql2 = "SELECT * FROM users WHERE user_id = '$uid'";
-                                        $result2 = mysqli_query($conn,$sql2);
-                                        $row2 = $result2->fetch_assoc();
-                                        echo "<td>".$row2['username']."</td>";
-                                        $sid = $row['service_id'];
-                                        $sql3 = "SELECT * FROM services WHERE service_id = '$sid'";
-                                        $result3 = mysqli_query($conn,$sql3);
-                                        $row3 = $result3->fetch_assoc();
-                                        echo "<td>".$row3['service_name']."</td>";
-                                        echo "<td>".$row['description']."</td>";
-                                        echo "<td>".$row['location']."</td>";
-                                        echo "<td>".$row['status']."</td>";
-                                        echo "</tr>";
-                                    }
-                                } 
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <!-- button see you requests -->
-                    <a href="artisan_requests.php">
-                        <button type="button" class="btn btn-primary m-3">See Requests</button>
-                </div>
-                <div>
-                    <h4>Messages</h4>
-                    <?php
-                        $sql = "SELECT * FROM messages WHERE artisan_id = '$aid'";
-                        $result = mysqli_query($conn, $sql);
-                        if ($result->num_rows > 0) {
-                            echo '<div class="d-flex flex-row ">';
-                            while ($row = $result->fetch_assoc()) {
-                                $uid = $row['user_id'];
-                                $sql2 = "SELECT * FROM users WHERE user_id = '$uid'";
-                                $result2 = mysqli_query($conn, $sql2);
-                                $row2 = $result2->fetch_assoc();
-                        ?>
-                                <div class="card  square-card  m-3">
-                                    <div class="card-header">
-                                        Date: <?php echo date('d-m-Y', strtotime($row['date_sent'])); ?>
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">User: <?php echo $row2['username']; ?></h5>
-                                        <p class="card-text"><?php echo $row['message_text']; ?></p>
-                                    </div>
-                                </div>
-                        <?php
-                            }
-                        } else {
-                            echo "No messages found.";
-                        }
-                        ?>
-                </div>
+        <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h3>Profile</h3>
             </div>
-        </main>
-        <footer class=" container py-5 me-5">
+            <div class="card-body">
+            <form  method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                <div>
+                    <img src="<?php echo $image; ?>" class="" alt="profile photo">
+                    <!-- <input type="file" class="form-control" id="photo" name="photo" style ="display:none;"> -->
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email"value="<?php echo $email; ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" class="form-control" id="phone" name ="phone" value="<?php echo $artisan_image; ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" class="form-control" id="address" name ="address"value="<?php echo $caddress; ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="cname">Company name:</label>
+                    <input type="text" class="form-control" id="cname" name ="cname"value="<?php echo $cname; ?>" disabled>
+                </div>
+                
+                    <?php
+                         if ($result3->num_rows > 0) {
+                            echo '<div class="form-group">
+                            <label for="services">Services:</label>';
+                           echo'<ul>';
+                           $service_ids = array(); 
+                            while ($row = $result3->fetch_assoc()) {
+                                $sid = $row['service_id'];
+                                $service_ids[] = $sid;
+                                $sql = "SELECT * FROM services WHERE service_id = '$sid'";
+                                $result4 = $conn->query($sql);
+                                $row2 = $result4->fetch_assoc();
+                                echo "<li>".$row2['service_name']."</li>";
+                            }
+
+                            echo '</ul> </div>';
+                        }
+                        
+                    ?>
+                    <button type="submit" class="btn btn-primary " id="addBtn" style="display: none;">add services</button>
+                
+                <div style="display: none;" id="selectBtn">
+                    <label for="select" > Add a service</label>
+                    <select   name="select">
+                        <?php
+                            $sql = "SELECT * FROM services";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                                echo '<option value="" disabled selected>Select service</option>';
+                                while ($row = $result->fetch_assoc()) {
+                                    $found = in_array($row['service_id'], $service_ids);
+                                    if (!$found){
+                                        echo "<option value='".$row['service_id']."'>".$row['service_name']."</option>";
+
+                                    }
+                                
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+
+
+                
+                <div class="form-group ">
+                    <label for="description">Description:</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" disabled><?php echo $desc; ?></textarea>
+                </div>
+                    <button type="button" class="btn btn-black " id="updateBtn" onclick="enableProfileFields()">Update Profile</button>
+                    <button type="submit" class="btn btn-primary " id="saveBtn" style="display: none;">Save Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    </main>
+    <footer class=" container py-5 me-5">
         <div class="row">
             <div class="col-6 col-md">
                 <ul class="list-unstyled text-small ">
@@ -310,5 +368,30 @@ if (!isset($_SESSION['USER_NAME'])) {
         </div>
     
     </footer>
+    <script>
+        function enableProfileFields() {
+            var emailInput = document.getElementById('email');
+            var updateBtn = document.getElementById('updateBtn');
+            var saveBtn = document.getElementById('saveBtn');
+            var addBtn =document.getElementById('addBtn');
+            var addBtn =document.getElementById('selectBtn');
+            // var photo =document.getElementById('photo');
+            var phoneInput =document.getElementById('phone');
+            var addressInput =document.getElementById('address');
+            var cnameInput =document.getElementById('cname');
+            var descriptionInput =document.getElementById('description');
+
+            emailInput.disabled = false;
+            phoneInput.disabled = false;
+            addressInput.disabled = false;
+            cnameInput.disabled = false;
+            descriptionInput.disabled = false;
+            updateBtn.style.display = 'none';
+            // photo.style.display = 'block';
+            saveBtn.style.display = 'block';
+            addBtn.style.display = 'block';
+            selectBtn.style.display = 'block';
+        }
+    </script>
     </body>
 </html>
