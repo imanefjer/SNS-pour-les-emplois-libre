@@ -1,4 +1,14 @@
+<?php
+    session_start();
 
+$logout="true";
+$connexion = "true";
+if(isset($_SESSION["USER_NAME"])){
+  $logout ="false";
+  $connexion = "false";
+
+}
+?>
 
 
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -155,19 +165,43 @@
                                         </button>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                                <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+                            <ul class="navbar-nav ml-auto">
+                              <?php
+                                if($logout == "false"){
+                                    echo '<li class="nav-item">
+                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                        <button type="button" class="btn transparent">
+                                            Profile
+                                        </button>
+                                    </a>
+                                    </li>';
+                                    echo '<li class="nav-item">
+                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                        <button type="button" class="btn transparent">
+                                            logout
+                                        </button>
+                                    </a> </li>';
+                                }
+                                if($connexion =="true"){
+                                    echo '<li class="nav-item">
                                     <a class="nav-link text-dark" href="./views/login.php">
                                         <button type="button" class="btn transparent">
                                             Connexion
                                         </button>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
+                                    </a> </li>';
+                                    echo '<li class="nav-item">
                                     <a class="nav-link text-dark" href="./views/register.php">
-                                  
-                                    
-                                    </a>
-                                </li>
+                                        <button type="button" class="btn transparent">
+                                            Inscription
+                                        </button>
+                                    </a> </li>';
+                                }
+                              ?>
+                      
+      
+                            </ul>
+                        </div>
                             </ul>
                         </div>
                     </div>

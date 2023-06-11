@@ -1,5 +1,7 @@
 <?php
     include '../db/dbhinc.php';
+    session_start();
+
     if (isset($_SESSION['USER_NAME'])) {
         header("Location: ../index.php");
     }
@@ -18,6 +20,9 @@
     <?php 
         $email = "";
         $emailError = $psdError = "";
+        $error = "";
+        $submit = true;
+
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = mysqli_real_escape_string($conn, $_POST['email']);
             $psd = mysqli_real_escape_string($conn, $_POST['psd']);
@@ -35,25 +40,31 @@
             if (mysqli_num_rows($result) > 0) {
                 $user_row = mysqli_fetch_assoc($result);
                 $hashed_password = $user_row['password'];   
-                echo $user_row['role'];            
-                if (((password_verify($psd, $hashed_password))) ) {
-                   {
-                    session_start();
-                    $_SESSION["USER_ID"] = $userId;
-                    $_SESSION["USER_NAME"] = $username;   
+                if (password_verify($psd, $hashed_password)) {
+                   
+                    $_SESSION["USER_ID"] = $user_row["user_id"];
+                    $_SESSION["USER_NAME"] = $user_row["username"];   
                     $_SESSION["ROLE"] = " ";                         
-                    header("location: user_dashboard.php");}
+                    header("location: user_dashboard.php");
                     
                 } else {
-                    $error = "Invalid password.";
+                    $psdError = "Invalid password.";
+                    $submit = false;
 
                 }
                 exit();
             } 
             else{
-                $error = "Invalid email or password.";
+                $emailError = "Invalid email or password.";
+                $submit = false;
+
             }
         }
+        else {
+            $submit = false;
+        }
+        if($submit == false) {
+    
          ?>
           <section>
         <div class="form-box">
@@ -65,12 +76,16 @@
                         <input type="email" name="email"  id="email" required>
                         <label for="id">Email</label>
                     </div>
+                    <span class="error"><?php echo $emailError; ?></span>
+
+
                     
                     <div class="inputbox">
                         <ion-icon name="lock-closed-outline"></ion-icon>
                         <input type="password" name="psd" id="psw" required>
                         <label for="psw">mot de passe</label>
                     </div>
+                    <span class="error"><?php echo $psdError; ?></span>
                     <?php if(isset($error)) { ?>
                             <span><?php echo $error; ?></span>
                     <?php } ?>
@@ -85,5 +100,9 @@
     </section>
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <?php } else { 
+                header("Location: user_dashboard.php");
+               
+        }?>
 </body>
 </html>

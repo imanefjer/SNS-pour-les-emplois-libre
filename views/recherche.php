@@ -8,6 +8,16 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $query = 'SELECT * FROM services WHERE service_name LIKE "%' . $recherche . '%"';
     $result = mysqli_query($conn, $query);
 }
+session_start();
+
+$logout="false";
+$connexion = "true";
+if(isset($_SESSION["USER_NAME"])){
+  $logout ="true";
+  $connexion = "false";
+
+}
+
 ?>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -150,8 +160,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                         <div class="collapse navbar-collapse justify-content-space_between" id="navbarText">
                             <ul class="navbar-nav ml-auto">
                         
-                                <li class="nav-item">
-                                <div class="form">
+                                <li class="nav-item itme form">
                                     <form action="" method="$_GET">
                                         <div class="form-group">
                                             <label for="search">
@@ -160,15 +169,42 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
                                             <input type="submit" name="envoyer" class=" btn-dark " value ="search">
                                         </div>
                                     </form>
-                                </div>
                                 </li>
-                                <li class="nav-item itme">
-                                    <a class="nav-link text-dark" href="./views/profile.php">
-                                        <button type="button" class="btn ">
+                            
+                              <?php
+                                if($logout == "true"){
+                                    echo '<li class="nav-item itme">
+                                    <a class="nav-link text-dark" href="profile.php">
+                                        <button type="button" class="btn transparent">
                                             Profile
                                         </button>
                                     </a>
-                                </li>
+                                    </li>';
+                                    echo '<li class="nav-item itme">
+                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                        <button type="button" class="btn transparent">
+                                            logout
+                                        </button>
+                                    </a> </li>';
+                                }
+                                else{
+                                    echo '<li class="nav-item itme">
+                                    <a class="nav-link text-dark" href="login.php">
+                                        <button type="button" class="btn transparent">
+                                            Connexion
+                                        </button>
+                                    </a> </li>';
+                                    echo '<li class="nav-item itme">
+                                    <a class="nav-link text-dark" href="register.php">
+                                        <button type="button" class="btn transparent">
+                                            Inscription
+                                        </button>
+                                    </a> </li>';
+                                }
+                              ?>
+                      
+      
+                           
                             </ul>
                         </div>
                     </div>
