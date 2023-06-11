@@ -2,16 +2,22 @@
 include '../db/dbhinc.php';
 session_start();
 
-echo 'sdf';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $company_name = $_POST["company_name"];
     $company_ad = $_POST["company_ad"];
     $desc = $_POST["desc"];
-    $destination = 'ffdvef';
+    $destination = '';
+    if (isset($_FILES["profile_picture"]) && $_FILES["profile_picture"]["error"] === UPLOAD_ERR_OK) {
+        $tempFilePath = $_FILES["profile_picture"]["tmp_name"];
+        $fileName = $_FILES["profile_picture"]["name"];
+        $fileSize = $_FILES["profile_picture"]["size"];
+        $fileType = $_FILES["profile_picture"]["type"];
 
-    echo 'ddfg';
+        // Move the uploaded file to a desired location
+        $destination = "../images/" . $fileName;
 
+        if (move_uploaded_file($tempFilePath, $destination)) {
     // Check if the username or email already exists in the database
     $result = mysqli_query($mysqli, "SELECT user_id FROM users WHERE username='" . $_SESSION['USER_NAME'] . "'");
     if ($result && mysqli_num_rows($result) > 0) {
@@ -26,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
         }
     }
-}
+}}}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -41,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <section>
         <div class="form-box">
             <div class="form-value">
-                <form  method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                <form enctype="multipart/form-data"  method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
                     <h2 >Login</h2>
                     <div class="inputbox">
                         <input type="text" name="company_name"  id="company_name" required>
