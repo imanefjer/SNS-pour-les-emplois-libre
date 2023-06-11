@@ -170,8 +170,14 @@ if(isset($_SESSION["USER_NAME"])){
                             <ul class="navbar-nav ml-auto">
                               <?php
                                 if($logout == "true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                    echo '<li class="nav-item">';
+                                    if ($_SESSION['ROLE'] == "artisan"){
+                                        echo '<a class="nav-link text-dark" href="./views/artisan_profile.php">';
+                                    }
+                                    else{
+                                        echo '<a class="nav-link text-dark" href="./views/profile.php">';
+                                    }
+                                    echo'
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
@@ -184,7 +190,7 @@ if(isset($_SESSION["USER_NAME"])){
                                         </button>
                                     </a> </li>';
                                 }
-                                if($connexion =="true"){
+                                else{
                                     echo '<li class="nav-item">
                                     <a class="nav-link text-dark" href="./views/login.php">
                                         <button type="button" class="btn transparent">

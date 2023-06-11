@@ -3,7 +3,7 @@ include_once '../db/dbhinc.php';
 session_start();
 $logout="false";
 $connexion = "true";
-if(isset($_SESSION["USER_NAME"])){
+if(isset($_SESSION["USER_ID"])){
   $logout ="true";
   $connexion = "false";
 
