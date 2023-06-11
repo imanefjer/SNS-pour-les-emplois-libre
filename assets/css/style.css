@@ -966,7 +966,7 @@ section {
   display: inline-block;
   border-radius: 50%;
   width: 24px;
-  height: 24px;
+  height: 20px;
   margin: 0 10px -6px 0;
   border: 3px solid #18d26e;
   border-top-color: #eee;
@@ -1111,22 +1111,4 @@ section {
 
 .service-item p {
   margin-bottom: 0;
-}
-.service-item {
-  border: 1px solid #ccc;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.service-item h3 {
-  margin-top: 0;
-}
-
-.service-item p {
-  margin-bottom: 0;
-}
-
-.make-request {
-  text-align: center;
-  margin-top: 20px;
 }

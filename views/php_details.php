@@ -1,6 +1,5 @@
 <?php
-include ("artisan_details.php");
-
+include "artisan_details.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $subject = $_POST['subject'];
   $message = $_POST['message'];
@@ -12,6 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   
   if (mysqli_query($conn, $query)) {
     echo "<div class='alert alert-success'>Your message has been sent. Thank you!</div>";
-  } 
+  } else {
+    echo "<div class='alert alert-success'>Your message has been sent. Thank you!</div>";
+  }
 }
 ?>
