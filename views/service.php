@@ -1,6 +1,6 @@
-
-
-
+<?php
+include_once '../db/dbhinc.php';
+?>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -24,7 +24,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <link rel="stylesheet" href="../css/indexstyle.css">
+        <link rel="stylesheet" href="../css/service.css">
 
     </head>
     <body>
@@ -32,7 +32,7 @@
             <header>
                 <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong mb-4 ">
                     <div class="container">
-                        <a class="navbar-brand" href="./index.php">
+                        <a class="navbar-brand" href="../index.php">
                             <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                             width="134.000000pt" height="30.000000pt" viewBox="0 0 268.000000 100.000000"
                             preserveAspectRatio="xMidYMid meet">
@@ -139,33 +139,13 @@
                             </g>
                             </svg>
                         </a>
-                        <div class="collapse navbar-collapse justify-content-end" id="navbarText">
+                        <div class="collapse navbar-collapse justify-content-space_between" id="navbarText">
                             <ul class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/commentcamarche.php">
-                                        <button type="button" class="btn transparent">
-                                            Comment ça marche
+                                <li class="nav-item itme">
+                                    <a class="nav-link text-dark" href="./views/profile.php">
+                                        <button type="button" class="btn ">
+                                            Profile
                                         </button>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="#service">
-                                        <button type="button" class="btn transparent">
-                                            Services
-                                        </button>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/login.php">
-                                        <button type="button" class="btn transparent">
-                                            Connexion
-                                        </button>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/register.php">
-                                  
-                                    
                                     </a>
                                 </li>
                             </ul>
@@ -174,73 +154,48 @@
                 </nav>
             </header>
         <main>
-            <div class="container hw">
-            <form action="./views/recherche.php" method="$_GET">
-                <h1 class="display-4 color">Trouvez un artisan <br> près de vous</h1>
-                <div class="d-flex justify-content-center">
-                    <div class="searchbar">
-                    <input class="search_input" type="text" name="search" placeholder="Search...">
-                    <input type="submit" name="envoyer" class="btn btn-dark ">
-                    </div>
-                </div>         
-            </form>
-                <p class="lead">
-                    <a  href="./views/register.php" class="insc">Inscription </a>
+            <div class="container py-5 me-5">
+            <div class="row">
+                <?php
+                    $sid = $_GET['service'];
+                    $result = mysqli_query($conn,"SELECT * FROM artisan_services WHERE service_id = '$sid'");
+                    if(mysqli_num_rows($result) > 0){
+                        echo '<h1 >Nos Artisans</h1>';
+                        
+                        while($res =mysqli_fetch_array($result) )
+                        {
+                            $id = $res['artisan_id'];
+                            $result1 = mysqli_query($conn,"SELECT * FROM artisans WHERE artisan_id = '$id' ");
+                            if(mysqli_num_rows($result1) > 0){
+
+                            while($row = mysqli_fetch_array($result1)){
+                                // echo '<div class="col-12 col-md-6 col-lg-4">';
+                                echo '<div class="card m-2" style="width: 23rem;">';
+                                // echo '<img src="./assets/images/'.$row['profile_picture'].'" class="card-img-top" alt =...>';
+                                echo '<div class="card-body">';
+                                $uid=$row['user_id'];
+                                $result2 = mysqli_query($conn,"SELECT * FROM users WHERE user_id = '$uid'");
+                                $res2 = mysqli_fetch_array($result2);
+                                echo '<h5 class="card-title">'.$res2['username'].'</h5>';
+                                echo '<p class="card-text">'.$row['description'].'</p>';
+                                echo '<a href="./views/artisan.php?id='.$row['artisan_id'].'" class="btn btn-primary">Voir plus</a>';
+                                echo '</div>';
+                                echo '</div>';
+                            }
+                        }  
+                    }
+                    }
+                    else{
+                        echo '<h1>Aucun Artisan</h1>';
+                    }
                     
-                    <a  href="./views/login.php" class="connex">Connexion </a>
-                </p>
-            </div>       
-        </div>
-        <div class = " container p-3">
-            <h1 class="p-4 text-secondary">Comment trouvez le bon artisan?</h1>
-            <div class="d-flex justify-content-between">
-                <div class="p-3">
-                    <h3 class ="beige">Définir vos besoins </h3>
-                    <p>
-                    Identifiez clairement le type d'artisan dont vous avez besoin et les compétences ou services 
-                    spécifiques requis pour votre projet.
-                    </p>
-                </div>
-                <div class="p-3">
-                    <h3  class ="beige">Recherchez des artisans </h3>
-                    <p>
-                    Recherchez des artisans dans votre région et consultez leurs profils pour voir leurs qualifications, 
-                    leurs photos de projets et leurs avis clients.
-                    </p>
-                </div>
-                <div class="p-3">
-                    <h3  class ="beige">Contacter les artisans </h3>
-                    <p>
-                    Contactez les artisans qui vous intéressent et discutez de votre projet avec eux. 
-                    Vous pouvez également consulter leurs profils pour voir leurs qualifications, leurs photos de projets et leurs avis clients.
-                    </p>
-                </div>
+
+                ?>
             </div>
-        </div>
-        <div class=" bg-light">
-            <div class="container p-3 ">
-                <h2 class="mx-4">Ces commentaires expriment mieux les choses.</h2>
-                
-                <div id="reviews-container " class="carousel slide mg" data-ride="carousel">
-                    <div class="carousel-inner ">
-                    <div class="carousel-item active">
-                        <h3>John Doe</h3>
-                        <p>Site web fantastique ! Très convivial et bien organisé. J'ai trouvé facilement ce dont j'avais besoin et les résultats ont dépassé mes attentes. Hautement recommandé !</p>
-                    </div>
-                    <div class="carousel-item">
-                        <h3>Jane Smith</h3>
-                        <p>Cette plateforme est incroyable ! Elle est très facile à utiliser et offre une grande variété d'artisans talentueux. J'ai pu trouver rapidement celui qui correspondait à mes besoins. Je suis vraiment satisfait de mon expérience.</p>
-                    </div>
-                    <div class="carousel-item">
-                        <h3>David Johnson</h3>
-                        <p>Je suis impressionné par ce site web. La qualité du service est exceptionnelle et j'ai reçu des résultats de grande qualité dans les délais promis. Je le recommande vivement à tous ceux qui cherchent à trouver le bon artisan pour leurs projets.</p>
-                    </div>
-                    </div>
-                </div>
             </div>
-        </div>
-    </main>
-    <footer class=" container py-5 me-5">
+
+        </main>
+        <footer class=" container py-5 me-5">
         <div class="row">
             <div class="col-6 col-md">
                 <ul class="list-unstyled text-small ">
@@ -277,19 +232,5 @@
         </div>
     
     </footer>
-           
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
-        <script>
-            $(document).ready(function() {
-            $('.carousel').carousel();
-            });
-        </script>
-       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"crossorigin="anonymous"></script>
     </body>
 </html>

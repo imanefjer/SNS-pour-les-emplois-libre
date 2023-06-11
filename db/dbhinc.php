@@ -3,10 +3,10 @@
    $dbuser = 'root';
    $dbpass = '';
    $dbname = 'artisans';
-   $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+   // $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+   $conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-   if($mysqli->connect_errno ) {
-      printf("Connect failed: %s<br />", $mysqli->connect_error);
-      exit();
+   if(! $conn ) {
+      die('Could not connect: ' . mysqli_error());
    }
 ?>
