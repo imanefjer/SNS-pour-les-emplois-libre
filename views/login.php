@@ -1,5 +1,5 @@
 <?php
-    include_once '../db/dbhinc.php';
+    include '../db/dbhinc.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -15,24 +15,27 @@
         $email = "";
         $emailError = $psdError = "";
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $email = mysqli_real_escape_string($conn, $_POST['email']);
-            $psd = mysqli_real_escape_string($conn, $_POST['psd']);
+            $email = mysqli_real_escape_string($mysqli, $_POST['email']);
+            $psd = mysqli_real_escape_string($mysqli, $_POST['psd']);
             if (empty($email)) {
                 $emailError = "Veuillez entrer votre email";
             }
-            if (!$conn) {
+            if (!$mysqli) {
                 die("Connection failed: " . mysqli_connect_error());
             }
-            $result = mysqli_query($conn, "SELECT * FROM Users WHERE Email='$email' ");
+            $result = mysqli_query($mysqli, "SELECT * FROM userss WHERE email='$email' ");
     
             if (mysqli_num_rows($result) > 0) {
                 $user_row = mysqli_fetch_assoc($result);
-                $hashed_password = $user_row['psd'];               
-                if (password_verify($psd, $hashed_password)) {
+                $hashed_password = $user_row['password'];   
+                echo $user_row['role'];            
+                if (((password_verify($psd, $hashed_password))) ) {
+                   {
                     session_start();
                     $_SESSION["USER_ID"] = $userId;
                     $_SESSION["USER_NAME"] = $username;                            
-                    header("location: index1.php");
+                    header("location: user_dashboard.php");}
+                    
                 } else {
                     $error = "Invalid password.";
 

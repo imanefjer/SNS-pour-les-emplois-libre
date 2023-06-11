@@ -3,10 +3,9 @@
     margin: 0;
     padding: 0;
     font-family: 'poppins',sans-serif;
-    color: rgba(179,173,161,1);
-}
+    color: white;}
 .register{
-
+    color: white;
     padding-top: 20px;
     
 }
@@ -29,7 +28,7 @@ background: radial-gradient(circle, rgba(179,173,161,1) 0%, rgba(63,48,69,1) 92%
 
     position: relative;
     width: 400px;
-    height: 450px;
+    height: 600px;
     border: 2px solid white;
     background-color: rgba(179,173,161,1);
     border-radius: 20px;
@@ -125,4 +124,5 @@ span{
 
 p {
     text-align: center;
+    color: white;
 }
