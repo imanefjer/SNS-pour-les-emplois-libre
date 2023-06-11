@@ -87,7 +87,7 @@
                     $_SESSION["USER_EMAIL"] = $email;
                     $_SESSION["USER_ID"] = $userId;
                 $_SESSION["USER_NAME"] = $username;                            
-                header("location: artisan_login.php");
+                header("location: ../index.php");
                 exit;
                 }
                 

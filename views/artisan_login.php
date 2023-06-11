@@ -1,8 +1,33 @@
 <?php
-    include '../db/dbhinc.php';
+include '../db/dbhinc.php';
+session_start();
 
+echo 'sdf';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $company_name = $_POST["company_name"];
+    $company_ad = $_POST["company_ad"];
+    $desc = $_POST["desc"];
+    $destination = 'ffdvef';
+
+    echo 'ddfg';
+
+    // Check if the username or email already exists in the database
+    $result = mysqli_query($mysqli, "SELECT user_id FROM users WHERE username='" . $_SESSION['USER_NAME'] . "'");
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $user_id = $row['user_id'];
+
+        $sql = "INSERT INTO artisans (artisan_id, company_name, company_address, description, profile_picture) VALUES ('$user_id', '$company_name', '$company_ad', '$desc', '$destination')";
+        if (mysqli_query($mysqli, $sql)) {
+            header("location: user_dashboard.php");
+            exit;
+        } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+        }
+    }
+}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +49,7 @@
                     </div>
                     <div class="inputbox">
                         <input type="text" name="company_ad"  id="company_ad" required>
-                        <label for="company_id">Company Adress</label>
+                        <label for="company_ad">Company Adress</label>
                     </div>
                     <div class="inputbox">
                         <input type="desc" name="desc" id="desc" required>
@@ -47,54 +72,7 @@
 
         </div>
     </section>
-    <?php
-if ($_SERVER["REQUEST_METHOD"] != "POST") {
-    echo 'rzef';
-    // Existing code for processing form fields
-    $company_name = $_POST["company_name"];
-    $company_ad = $_POST["company_ad"];
-    $desc = $_POST["desc"];
-    $destination = "sfff";
-    echo 'zggvfrf';
-
-    // Check if a profile picture file was uploaded
-    if (isset($_FILES["profile_picture"]) && $_FILES["profile_picture"]["error"] === UPLOAD_ERR_OK) {
-        $tempFilePath = $_FILES["profile_picture"]["tmp_name"];
-        $fileName = $_FILES["profile_picture"]["name"];
-        $fileSize = $_FILES["profile_picture"]["size"];
-        $fileType = $_FILES["profile_picture"]["type"];
-        echo $destination;
-
-        // Move the uploaded file to a desired location
-        $destination = "../images/" . $fileName;
-
-        if (move_uploaded_file($tempFilePath, $destination)) {
-            $query = "SELECT user_id FROM users WHERE email = '" . $_SESSION['USER_EMAIL'] . "'";
-            echo $destination;
-
-            // Execute the query to retrieve user_id
-            $result = mysqli_query($mysqli, $query);
-            if ($result && mysqli_num_rows($result) > 0) {
-                $row = mysqli_fetch_assoc($result);
-                $user_id = $row['user_id'];
-
-                $sql = "INSERT INTO artisans (user_id, company_name, company_address, description, profile_picture) VALUES ('$user_id', '$company_name', '$company_ad', '$desc', '$destination')";
-                if (mysqli_query($mysqli, $sql)) {
-                    header("Location: user_dashboard.php");
-                    exit;
-                } else {
-                    echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
-                }
-            } else {
-                echo "User not found.";
-            }
-        } else {
-            // Error handling for file upload failure
-            echo "Failed to upload the profile picture.";
-        }
-    }
-}
-?>
+  
 
 </body>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>

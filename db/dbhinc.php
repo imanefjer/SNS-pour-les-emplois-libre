@@ -1,7 +1,7 @@
 <?php
    $dbhost = 'localhost';
    $dbuser = 'root';
-   $dbpass = 'root';
+   $dbpass = '';
    $dbname = 'artisans';
    $mysqli = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
 
