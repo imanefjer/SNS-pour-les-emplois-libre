@@ -1,17 +1,89 @@
 <?php
-    session_start();
-
+include_once '../db/dbhinc.php';
+session_start();
 $logout="false";
 $connexion = "true";
 if(isset($_SESSION["USER_NAME"])){
-  
-  $logout ="false";
-  $connexion = "true";
+  $logout ="true";
+  $connexion = "false";
 
 }
+if (!isset($_SESSION['USER_NAME'])) {
+    header("Location: index.php");
+ }
+ else{
+    if($_SESSION['ROLE'] != "artisan"){
+        header("Location: index.php");
+    }
+ }
+$id = $_SESSION['USER_ID'];
+$sql = "SELECT * FROM artisans WHERE artisan_id = '$id';";
+$result = mysqli_query($conn, $sql);
+$row = mysqli_fetch_assoc($result);
+$cname = $row['company_name'];
+$caddress = $row['company_address'];
+$desc = $row['description'];
+$image = $row["profile_picture"];
+$sql2 = "SELECT * FROM users WHERE user_id = '$id';";
+$result2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_assoc($result2);
+$artisan_username = $row2['username'];
+$artisan_password = $row2['password'];
+$artisan_image = $row2['phone_number'];
+$email= $row2['email'];
+$sql3= "SELECT * FROM artisan_services WHERE artisan_id = '$id';";
+$result3 = mysqli_query($conn, $sql3);
+
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+    $cname = $_POST['cname'];
+    $destination = '';
+    $description ="";
+    // if (isset($_FILES["photo"]) && $_FILES["photo"]["error"] === UPLOAD_ERR_OK) {
+    //     $tempFilePath = $_FILES["photo"]["tmp_name"];
+    //     $fileName = $_FILES["photo"]["name"];
+    //     $destination = "../images/" . $fileName;
+    //     echo $description;
+    //     if (move_uploaded_file($tempFilePath, $destination)) {
+    //         $sql = "UPDATE artisans SET profile_picture = '$destination' WHERE artisan_id = '$id';";
+    //         $result = mysqli_query($conn, $sql);
+    //     }
+    //     }
+    if (isset($_POST['description'])) {
+        $description = $_POST['description'];
+        
+    }
+    $sql1 = "UPDATE artisans SET 
+                company_name = '$cname',
+                company_address = '$address',
+                description = '$description'
+            WHERE artisan_id = '$id';";
+
+    $result = mysqli_query($conn, $sql1);
+    $sql2 = "UPDATE users SET 
+                email = '$email',
+                phone_number = '$phone',
+            WHERE user_id = '$id';";
+    $result = mysqli_query($conn, $sql2);
+    if (isset($_POST['select'])) {
+        $selectedService = $_POST['select'];
+        if (!empty($selectedService)) {
+            $sqlInsert = "INSERT INTO artisan_services (artisan_id, service_id) VALUES ('$id', '$selectedService');";
+            $resultInsert = mysqli_query($conn, $sqlInsert);
+        }
+    }
+    header("Location: ".$_SERVER['PHP_SELF']);
+
+    
+      
+}
+
 ?>
-
-
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -35,7 +107,7 @@ if(isset($_SESSION["USER_NAME"])){
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <link rel="stylesheet" href="../css/indexstyle.css">
+        <link rel="stylesheet" href="../css/profile.css">
 
     </head>
     <body>
@@ -43,7 +115,7 @@ if(isset($_SESSION["USER_NAME"])){
             <header>
                 <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong mb-4 ">
                     <div class="container">
-                        <a class="navbar-brand" href="./index.php">
+                        <a class="navbar-brand" href="../index.php">
                             <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                             width="134.000000pt" height="30.000000pt" viewBox="0 0 268.000000 100.000000"
                             preserveAspectRatio="xMidYMid meet">
@@ -150,135 +222,114 @@ if(isset($_SESSION["USER_NAME"])){
                             </g>
                             </svg>
                         </a>
+                        <div class="collapse navbar-collapse justify-content-space_between" id="navbarText">
                         <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="#">
-                                        <button type="button" class="btn transparent">
-                                            Comment ça marche
-                                        </button>
+                                    <a class="nav-link text-dark" href="artisan_dashboard.php">
+                                            <button type="button" class="btn transparent">
+                                                Home
+                                            </button>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="#service">
-                                        <button type="button" class="btn transparent">
-                                            Services
-                                        </button>
-                                    </a>
-                                </li>
-                                <div class="collapse navbar-collapse justify-content-end" id="navbarText">
-                            <ul class="navbar-nav ml-auto">
-                              <?php
-                                if($logout == "true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/logout.php">
-                                        <button type="button" class="btn transparent">
-                                            Profile
-                                        </button>
-                                    </a>
-                                    </li>';
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                    <a class="nav-link text-dark" href="/logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>
-                                    </a> </li>';
-                                }
-                                if($connexion =="true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/login.php">
-                                        <button type="button" class="btn transparent">
-                                            Connexion
-                                        </button>
-                                    </a> </li>';
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/register.php">
-                                        <button type="button" class="btn transparent">
-                                            Inscription
-                                        </button>
-                                    </a> </li>';
-                                }
-                              ?>
-                      
-      
+                                    </a>
+                                </li>
                             </ul>
                         </div>
-                            </ul>
                         </div>
                     </div>
                 </nav>
             </header>
         <main>
-            <div class="container hw">
-            <form action="./views/recherche.php" method="$_GET">
-                <h1 class="display-4 color">Trouvez un artisan <br> près de vous</h1>
-                <div class="d-flex justify-content-center">
-                    <div class="searchbar">
-                    <input class="search_input" type="text" name="search" placeholder="Search...">
-                    <input type="submit" name="envoyer" class="btn btn-dark " value="search">
-                    </div>
-                </div>         
-            </form>
-            <?php
-            if ($connexion =="true"){
-                echo'<p class="lead">
-                <a  href="./views/register.php" class="insc">Inscription </a>
+        <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h3>Profile</h3>
+            </div>
+            <div class="card-body">
+            <form  method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                <div>
+                    <img src="<?php echo $image; ?>" class="" alt="profile photo">
+                    <!-- <input type="file" class="form-control" id="photo" name="photo" style ="display:none;"> -->
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email"value="<?php echo $email; ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" class="form-control" id="phone" name ="phone" value="<?php echo $artisan_image; ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" class="form-control" id="address" name ="address"value="<?php echo $caddress; ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="cname">Company name:</label>
+                    <input type="text" class="form-control" id="cname" name ="cname"value="<?php echo $cname; ?>" disabled>
+                </div>
                 
-                <a  href="./views/login.php" class="connex">Connexion </a>
-            </p>';
-            }
-            ?>
+                    <?php
+                         if ($result3->num_rows > 0) {
+                            echo '<div class="form-group">
+                            <label for="services">Services:</label>';
+                           echo'<ul>';
+                           $service_ids = array(); 
+                            while ($row = $result3->fetch_assoc()) {
+                                $sid = $row['service_id'];
+                                $service_ids[] = $sid;
+                                $sql = "SELECT * FROM services WHERE service_id = '$sid'";
+                                $result4 = $conn->query($sql);
+                                $row2 = $result4->fetch_assoc();
+                                echo "<li>".$row2['service_name']."</li>";
+                            }
+
+                            echo '</ul> </div>';
+                        }
+                        
+                    ?>
+                    <button type="submit" class="btn btn-primary " id="addBtn" style="display: none;">add services</button>
                 
-            </div>       
-        </div>
-        <div class = " container p-3">
-            <h1 class="p-4 text-secondary">Comment trouvez le bon artisan?</h1>
-            <div class="d-flex justify-content-between">
-                <div class="p-3">
-                    <h3 class ="beige">Définir vos besoins </h3>
-                    <p>
-                    Identifiez clairement le type d'artisan dont vous avez besoin et les compétences ou services 
-                    spécifiques requis pour votre projet.
-                    </p>
+                <div style="display: none;" id="selectBtn">
+                    <label for="select" > Add a service</label>
+                    <select   name="select">
+                        <?php
+                            $sql = "SELECT * FROM services";
+                            $result = $conn->query($sql);
+                            if ($result->num_rows > 0) {
+                                echo '<option value="" disabled selected>Select service</option>';
+                                while ($row = $result->fetch_assoc()) {
+                                    $found = in_array($row['service_id'], $service_ids);
+                                    if (!$found){
+                                        echo "<option value='".$row['service_id']."'>".$row['service_name']."</option>";
+
+                                    }
+                                
+                                }
+                            }
+                        ?>
+                    </select>
                 </div>
-                <div class="p-3">
-                    <h3  class ="beige">Recherchez des artisans </h3>
-                    <p>
-                    Recherchez des artisans dans votre région et consultez leurs profils pour voir leurs qualifications, 
-                    leurs photos de projets et leurs avis clients.
-                    </p>
+
+
+                
+                <div class="form-group ">
+                    <label for="description">Description:</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" disabled><?php echo $desc; ?></textarea>
                 </div>
-                <div class="p-3">
-                    <h3  class ="beige">Contacter les artisans </h3>
-                    <p>
-                    Contactez les artisans qui vous intéressent et discutez de votre projet avec eux. 
-                    Vous pouvez également consulter leurs profils pour voir leurs qualifications, leurs photos de projets et leurs avis clients.
-                    </p>
-                </div>
+                    <button type="button" class="btn btn-black " id="updateBtn" onclick="enableProfileFields()">Update Profile</button>
+                    <button type="submit" class="btn btn-primary " id="saveBtn" style="display: none;">Save Profile</button>
+                </form>
             </div>
         </div>
-        <div class=" bg-light">
-            <div class="container p-3 ">
-                <h2 class="mx-4">Ces commentaires expriment mieux les choses.</h2>
-                
-                <div id="reviews-container " class="carousel slide mg" data-ride="carousel">
-                    <div class="carousel-inner ">
-                    <div class="carousel-item active">
-                        <h3>John Doe</h3>
-                        <p>Site web fantastique ! Très convivial et bien organisé. J'ai trouvé facilement ce dont j'avais besoin et les résultats ont dépassé mes attentes. Hautement recommandé !</p>
-                    </div>
-                    <div class="carousel-item">
-                        <h3>Jane Smith</h3>
-                        <p>Cette plateforme est incroyable ! Elle est très facile à utiliser et offre une grande variété d'artisans talentueux. J'ai pu trouver rapidement celui qui correspondait à mes besoins. Je suis vraiment satisfait de mon expérience.</p>
-                    </div>
-                    <div class="carousel-item">
-                        <h3>David Johnson</h3>
-                        <p>Je suis impressionné par ce site web. La qualité du service est exceptionnelle et j'ai reçu des résultats de grande qualité dans les délais promis. Je le recommande vivement à tous ceux qui cherchent à trouver le bon artisan pour leurs projets.</p>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
+
+    
     </main>
     <footer class=" container py-5 me-5">
         <div class="row">
@@ -317,19 +368,30 @@ if(isset($_SESSION["USER_NAME"])){
         </div>
     
     </footer>
-           
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
-        <script>
-            $(document).ready(function() {
-            $('.carousel').carousel();
-            });
-        </script>
-       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"crossorigin="anonymous"></script>
+    <script>
+        function enableProfileFields() {
+            var emailInput = document.getElementById('email');
+            var updateBtn = document.getElementById('updateBtn');
+            var saveBtn = document.getElementById('saveBtn');
+            var addBtn =document.getElementById('addBtn');
+            var addBtn =document.getElementById('selectBtn');
+            // var photo =document.getElementById('photo');
+            var phoneInput =document.getElementById('phone');
+            var addressInput =document.getElementById('address');
+            var cnameInput =document.getElementById('cname');
+            var descriptionInput =document.getElementById('description');
+
+            emailInput.disabled = false;
+            phoneInput.disabled = false;
+            addressInput.disabled = false;
+            cnameInput.disabled = false;
+            descriptionInput.disabled = false;
+            updateBtn.style.display = 'none';
+            // photo.style.display = 'block';
+            saveBtn.style.display = 'block';
+            addBtn.style.display = 'block';
+            selectBtn.style.display = 'block';
+        }
+    </script>
     </body>
 </html>

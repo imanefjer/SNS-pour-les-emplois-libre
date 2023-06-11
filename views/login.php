@@ -44,8 +44,13 @@
                    
                     $_SESSION["USER_ID"] = $user_row["user_id"];
                     $_SESSION["USER_NAME"] = $user_row["username"];   
-                    $_SESSION["ROLE"] = " ";                         
-                    header("location: user_dashboard.php");
+                    $_SESSION["ROLE"] = $user_row["role"];
+                    if($_SESSION["ROLE"] == "artisan"){
+                        header("location: artisan_dashboard.php");
+                    }
+                    else{
+                        header("location: user_dashboard.php");
+                    }                         
                     
                 } else {
                     $psdError = "Invalid password.";
