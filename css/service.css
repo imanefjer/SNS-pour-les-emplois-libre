@@ -27,3 +27,7 @@ a, a:hover{
     color: black;
     text-decoration: none;
 }
+.square-card {
+  width: 220px;
+  height: 220px;
+}
