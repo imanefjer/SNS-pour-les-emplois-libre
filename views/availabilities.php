@@ -16,7 +16,8 @@ if (!isset($_SESSION['USER_NAME'])) {
         header("Location: artisan_profile.php");
     }
  }
- $artisanId = 3;
+ $artisanId = $_GET['artisan_id'];
+ 
 
 ?>
 
@@ -73,7 +74,7 @@ if (!isset($_SESSION['USER_NAME'])) {
 <header>
                 <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong mb-4 ">
                     <div class="container">
-                        <a class="navbar-brand" href="./index.php">
+                        <a class="navbar-brand" href="../index.php">
                             <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                             width="134.000000pt" height="30.000000pt" viewBox="0 0 268.000000 100.000000"
                             preserveAspectRatio="xMidYMid meet">
