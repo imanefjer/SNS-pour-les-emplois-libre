@@ -108,9 +108,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <link rel="stylesheet" href="../css/profile.css">
-
+        <style>
+    .service-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+</style>
     </head>
     <body>
+  
+
         <div class="im">
             <header>
                 <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong mb-4 ">

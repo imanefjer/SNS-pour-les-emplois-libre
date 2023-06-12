@@ -2,13 +2,29 @@
     margin-top:20px;
 }
 .form{
+    border-color: black; 
+    border-radius: 15px;
     margin-right:300px;
 }
+#cadre{
+    border-color: black; 
+
+    border:  solid 5px black;
+    background-color: red;
+}
+
 input{
     margin: 10px;
     height: 30px;
     border-radius: 5px;
 }
+.service-box {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+
 .btn {
     color: white;
     background-color: black;
@@ -24,4 +40,8 @@ input{
 a, a:hover{
     color: black;
     text-decoration: none;
+}
+p{
+    border:  solid 5px black;
+
 }

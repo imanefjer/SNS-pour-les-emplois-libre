@@ -2,10 +2,8 @@
 include '../db/dbhinc.php';
 session_start();
 if (isset($_SESSION['USER_NAME']) && isset($_SESSION["ROLE"])) {
-    if ($_SESSION["role"] == "artisan" && isset($_SESSION["INFO"])) {
-        header("Location: user_dashboard.php");
-    } 
-    if($_SESSION["ROLE"] ="client"){
+    
+    if($_SESSION["ROLE"] =="client"){
         header("Location: user_dashboard.php");
     }
 }
@@ -36,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_query($conn, $sql)) {
             $_SESSION["INFO"] = "true";
             $_SESSION["ARTISAN_ID"] = $user_id;
-            header("location: user_dashboard.php");
+            header("location: ../index.php");
             exit;
         } else {
             $error = "Error: " . $sql . "<br>" . mysqli_error($conn);

@@ -210,28 +210,31 @@ if(isset($_SESSION["USER_NAME"])){
                         </div>
                     </div>
                 </nav>
-            </header>
-        <main>
-            <div class="container py-5 me-5">
-            <?php
-                if (mysqli_num_rows($result) > 0) {
-                    while ($res = mysqli_fetch_assoc($result)) {
-                        $service = $res['service_id'];
-                        $link = "service.php?service=" . urlencode($service);
-                        echo '<a href="' . $link . '">';
-                ?>
-                        <h4><?= $res['service_name']; ?></h4></a>
-                        <p><?= $res['service_description']; ?></p>
-                <?php
-                    }
-                } else {
-                    echo "<h4>Aucun service trouvé.</h4>";
-                }
+                </header>
+                <main>
+    <div class="container py-5 me-5">
+        <?php
+        if (mysqli_num_rows($result) > 0) {
+            while ($res = mysqli_fetch_assoc($result)) {
+                $service = $res['service_id'];
+                $link = "service.php?service=" . urlencode($service);
+                echo '<a href="' . $link . '">';
+        ?>
+                <div class="service-box">
+                    <h4><?= $res['service_name']; ?></h4>
+                    <p><?= $res['service_description']; ?></p>
+                </div>
+                </a>
+        <?php
+            }
+        } else {
+            echo "<h4>Aucun service trouvé.</h4>";
+        }
+        ?>
+    </div>
+</main>
 
-                ?>
-            </div>
-        
-        </main>
+
         <footer class=" container py-5 me-5">
         <div class="row">
             <div class="col-6 col-md">
