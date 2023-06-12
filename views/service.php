@@ -193,31 +193,53 @@ if(isset($_SESSION["USER_NAME"])){
         <main>
             <div class="container py-5 me-5">
             <div class="row">
+                <style>
+                    .img{
+                        max-width: 10%;
+                    }
+                    .btni{
+                        margin-left: 46%;
+                    }
+                    .container3{
+                        border: double;
+                        border-color: grey;
+                        padding: 20px;
+                        width: 95%;
+                        margin-left: 20px;
+                        margin-top: 2px;
+                    }
+                    .name{
+                        color:blueviolet;
+                    }
+                    .arti{
+                        font-family: cursive;
+                        margin-bottom: 15px;
+                    }
+                </style>
                 <?php
                     $sid = $_GET['service'];
                     $result = mysqli_query($conn,"SELECT * FROM artisan_services WHERE service_id = '$sid'");
                     if(mysqli_num_rows($result) > 0){
-                        echo '<h1 >Nos Artisans</h1>';
+                        echo '<h1 class ="arti" >Nos Artisans:</h1>';
                         
                         while($res =mysqli_fetch_array($result) )
                         {
                             $id = $res['artisan_id'];
-                            $result1 = mysqli_query($conn,"SELECT * FROM artisans WHERE artisan_id = '$id' ");
+                            $result1 = mysqli_query($conn,"SELECT * FROM artisans a JOIN users u on u.user_id = a.artisan_id  WHERE artisan_id = '$id' ");
                             if(mysqli_num_rows($result1) > 0){
 
                             while($row = mysqli_fetch_array($result1)){
-                                // echo '<div class="col-12 col-md-6 col-lg-4">';
-                                echo '<div class="card m-2" style="width: 23rem;">';
-                                // echo '<img src="./assets/images/'.$row['profile_picture'].'" class="card-img-top" alt =...>';
-                                echo '<div class="card-body">';
-                                $uid=$row['user_id'];
-                                $result2 = mysqli_query($conn,"SELECT * FROM users WHERE user_id = '$uid'");
-                                $res2 = mysqli_fetch_array($result2);
-                                echo '<h5 class="card-title">'.$res2['username'].'</h5>';
-                                echo '<p class="card-text">'.$row['description'].'</p>';
-                                echo '<a href="./views/artisan.php?id='.$row['artisan_id'].'" class="btn btn-primary">Voir plus</a>';
+                                echo '<div class= "container3">';
+                                echo '<div><img  class="img-fluid img-thumbnail img" src="'.$row['profile_picture'].'" "></div>';
+                                
+                                echo '<div style="margin-top:5px; margin-left:5px"><h5 class="card-title name">Name: '.$row['username'].'</h5>';
+                                echo '<p style="margin-left:10px">Description: '.$row['description'].'</p></div>';
+                                echo '<p style="margin-left:14px">Company name: '.$row['company_name'].'</p>';
+                                echo '<p style="margin-left:14px">Company address: '.$row['company_address'].'</p>';
+                                
+                                echo '<a href="./views/artisan.php?id='.$row['artisan_id'].'" class="btn btn-primary btni">Voir plus</a>';
                                 echo '</div>';
-                                echo '</div>';
+                                
                             }
                         }  
                     }
