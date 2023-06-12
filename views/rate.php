@@ -1,32 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <?php
-    
-    include_once '../db/dbhinc.php';
-    session_start();
-    $logout="false";
-    $connexion = "true";
-    if(isset($_SESSION["USER_ID"])){
-      $logout ="true";
-      $connexion = "false";
-    }
-    
+<?php
+include_once '../db/dbhinc.php';
+session_start();
+$logout = "false";
+$connexion = "true";
+
+if (isset($_SESSION["USER_ID"])) {
+    $logout = "true";
+    $connexion = "false";
+}
+
+if (isset($_GET['artisan_id'])) {
     $artisan_id = $_GET['artisan_id'];
-    $_SESSION['artisan_id']= $artisan_id;
+    $_SESSION['artisan_id'] = $artisan_id;
     
-    $result = mysqli_query($conn,"SELECT AVG(rating) as avg, artisan_id FROM reviews GROUP BY artisan_id HAVING artisan_id = '$artisan_id' ");
-    $res =mysqli_fetch_array($result);
-    $result1 = mysqli_query($conn,"SELECT count(*) as cnt,artisan_id FROM reviews GROUP BY artisan_id HAVING artisan_id = '$artisan_id' ");
-    $avg=$res['avg'];
+    $result = mysqli_query($conn, "SELECT AVG(rating) as avg, artisan_id FROM reviews GROUP BY artisan_id HAVING artisan_id = '$artisan_id' ");
+    $res = mysqli_fetch_array($result);
     
-    $res1 =mysqli_fetch_array($result1);
-    $cnt=$res1['cnt'];
+    $result1 = mysqli_query($conn, "SELECT COUNT(*) as cnt, artisan_id FROM reviews WHERE artisan_id = '$artisan_id' ");
+    $res1 = mysqli_fetch_array($result1);
+
+    if ($res) {
+        $avg = $res['avg'];
+    } else {
+        $avg = 0;
+    }
+
+    if ($res1) {
+        $cnt = $res1['cnt'];
+    } else {
+        $cnt = 0;
+    }
+}
+?>
 
 
-    //$GET[artisan_id]
-
-    ?>
 
 <!-- Font Awesome Icon Library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -47,7 +57,7 @@
     <header>
                 <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong mb-4 ">
                     <div class="container">
-                        <a class="navbar-brand" href="./index.php">
+                        <a class="navbar-brand" href="../index.php">
                             <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                             width="134.000000pt" height="30.000000pt" viewBox="0 0 268.000000 100.000000"
                             preserveAspectRatio="xMidYMid meet">

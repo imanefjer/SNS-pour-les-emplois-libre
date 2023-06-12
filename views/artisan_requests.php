@@ -168,7 +168,7 @@ if (!isset($_SESSION['USER_NAME'])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="/profile.php">
+                                    <a class="nav-link text-dark" href="profile.php">
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
