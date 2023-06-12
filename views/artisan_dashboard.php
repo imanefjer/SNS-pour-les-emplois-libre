@@ -212,7 +212,6 @@ if (!isset($_SESSION['USER_NAME'])) {
                             $aid = $_SESSION['USER_ID'];
                                 $sql = "SELECT * FROM requests WHERE artisan_id = '$aid'";
                                 $result = mysqli_query($conn,$sql);
-                                if ($result !== false){
                                 if ($result->num_rows > 0) {
                                     while($row = $result->fetch_assoc()) {
                                         echo "<tr>";
@@ -233,7 +232,7 @@ if (!isset($_SESSION['USER_NAME'])) {
                                         echo "<td>".$row['status']."</td>";
                                         echo "</tr>";
                                     }
-                                } }
+                                } 
                             ?>
                         </tbody>
                     </table>
@@ -242,61 +241,40 @@ if (!isset($_SESSION['USER_NAME'])) {
                     <!-- button see you requests -->
                     <a href="artisan_requests.php">
                         <button type="button" class="btn btn-primary m-3">See Requests</button>
-                    </a>
                 </div>
                 <div>
                     <h4>Messages</h4>
                     <?php
-$sql = "SELECT * FROM messages WHERE artisan_id = '$aid'";
-$result = mysqli_query($conn, $sql);
-if ($result->num_rows > 0) {
-    echo '<div class="grid-container">';
-    $count = 0;
-    while ($row = $result->fetch_assoc()) {
-        $uid = $row['user_id'];
-        $sql2 = "SELECT * FROM users WHERE user_id = '$uid'";
-        $result2 = mysqli_query($conn, $sql2);
-        $row2 = $result2->fetch_assoc();
-
-        if ($count % 3 == 0) {
-            echo '<div class="grid-row">';
-        }
-
-        echo '<div class="grid-item">';
-        echo '<div class="card square-card m-3">';
-        echo '<div class="card-header">';
-        echo 'Date: ' . date('d-m-Y', strtotime($row['date_sent']));
-        echo '</div>';
-        echo '<div class="card-body">';
-        echo '<h5 class="card-title">User: ' . $row2['username'] . '</h5>';
-        echo '<p class="card-text">' . $row['message_text'] . '</p>';
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-
-        if ($count % 3 == 2) {
-            echo '</div>'; // Close the grid-row div after every third item
-        }
-
-        $count++;
-    }
-
-    // Close any remaining grid-row div
-    if ($count % 3 != 0) {
-        echo '</div>';
-    }
-
-    echo '</div>'; // Close the grid-container div
-} else {
-    // Handle case when no rows are returned
-}
-?>
-
-
+                        $sql = "SELECT * FROM messages WHERE artisan_id = '$aid'";
+                        $result = mysqli_query($conn, $sql);
+                        if ($result->num_rows > 0) {
+                            echo '<div class="d-flex flex-wrap ">';
+                            while ($row = $result->fetch_assoc()) {
+                                $uid = $row['user_id'];
+                                $sql2 = "SELECT * FROM users WHERE user_id = '$uid'";
+                                $result2 = mysqli_query($conn, $sql2);
+                                $row2 = $result2->fetch_assoc();
+                        ?>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="card  square-card  m-3">
+                                        <div class="card-header">
+                                            Date: <?php echo date('d-m-Y', strtotime($row['date_sent'])); ?>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">User: <?php echo $row2['username']; ?></h5>
+                                            <p class="card-text"><?php echo $row['message_text']; ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                        <?php
+                            }
+                        } else {
+                            echo "No messages found.";
+                        }
+                        ?>
                 </div>
             </div>
         </main>
-
         <footer class=" container py-5 me-5">
         <div class="row">
             <div class="col-6 col-md">
