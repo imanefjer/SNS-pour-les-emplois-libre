@@ -3,10 +3,37 @@ include_once '../db/dbhinc.php';
 session_start();
 $logout="false";
 $connexion = "true";
-if(isset($_SESSION["USER_ID"])){
+if(isset($_SESSION["USER_NAME"])){
   $logout ="true";
   $connexion = "false";
 
+}
+if (!isset($_SESSION['USER_NAME'])) {
+    header("Location: ../index.php");
+ }
+ else{
+    if($_SESSION['ROLE'] != "client"){
+        header("Location: artisan_profile.php");
+    }
+ }
+$id = $_SESSION['USER_ID'];
+$sql2 = "SELECT * FROM users WHERE user_id = '$id';";
+$result2 = mysqli_query($conn, $sql2);
+$row2 = mysqli_fetch_assoc($result2);
+$num = $row2['phone_number'];
+$email= $row2['email'];
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $sql2 = "UPDATE users SET 
+                email = '$email',
+                phone_number = '$phone'
+            WHERE user_id = '$id';";
+    $result = mysqli_query($conn, $sql2);
+    header("Location: ".$_SERVER['PHP_SELF']);      
 }
 
 ?>
@@ -23,7 +50,7 @@ if(isset($_SESSION["USER_ID"])){
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Artisan</title>
+        <title>Profile</title>
         <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -33,7 +60,7 @@ if(isset($_SESSION["USER_ID"])){
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <link rel="stylesheet" href="../css/service.css">
+        <link rel="stylesheet" href="../css/profile.css">
 
     </head>
     <body>
@@ -151,39 +178,20 @@ if(isset($_SESSION["USER_ID"])){
                         <div class="collapse navbar-collapse justify-content-space_between" id="navbarText">
                         <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
-                              <?php
-                                if($logout == "true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="profile.php">
-                                        <button type="button" class="btn transparent">
-                                            Profile
-                                        </button>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="../index.php">
+                                            <button type="button" class="btn transparent">
+                                                Home
+                                            </button>
                                     </a>
-                                    </li>';
-                                    echo '<li class="nav-item">
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link text-dark" href="logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>
-                                    </a> </li>';
-                                }
-                                else{
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="login.php">
-                                        <button type="button" class="btn transparent">
-                                            Connexion
-                                        </button>
-                                    </a> </li>';
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/register.php">
-                                        <button type="button" class="btn transparent">
-                                            Inscription
-                                        </button>
-                                    </a> </li>';
-                                }
-                              ?>
-                      
-      
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                         </div>
@@ -191,70 +199,32 @@ if(isset($_SESSION["USER_ID"])){
                 </nav>
             </header>
         <main>
-            <div class="container py-5 me-5">
-            <div class="row">
-                <style>
-                    .img{
-                        max-width: 10%;
-                    }
-                    .btni{
-                        margin-left: 46%;
-                    }
-                    .container3{
-                        border: double;
-                        border-color: grey;
-                        padding: 20px;
-                        width: 95%;
-                        margin-left: 20px;
-                        margin-top: 2px;
-                    }
-                    .name{
-                        color:blueviolet;
-                    }
-                    .arti{
-                        font-family: cursive;
-                        margin-bottom: 15px;
-                    }
-                </style>
-                <?php
-                    $sid = $_GET['service'];
-                    $result = mysqli_query($conn,"SELECT * FROM artisan_services WHERE service_id = '$sid'");
-                    if(mysqli_num_rows($result) > 0){
-                        echo '<h1 class ="arti" >Nos Artisans:</h1>';
-                        
-                        while($res =mysqli_fetch_array($result) )
-                        {
-                            $id = $res['artisan_id'];
-                            $result1 = mysqli_query($conn,"SELECT * FROM artisans a JOIN users u on u.user_id = a.artisan_id  WHERE artisan_id = '$id' ");
-                            if(mysqli_num_rows($result1) > 0){
-
-                            while($row = mysqli_fetch_array($result1)){
-                                echo '<div class= "container3">';
-                                echo '<div><img  class="img-fluid img-thumbnail img" src="'.$row['profile_picture'].'" "></div>';
-                                
-                                echo '<div style="margin-top:5px; margin-left:5px"><h5 class="card-title name">Name: '.$row['username'].'</h5>';
-                                echo '<p style="margin-left:10px">Description: '.$row['description'].'</p></div>';
-                                echo '<p style="margin-left:14px">Company name: '.$row['company_name'].'</p>';
-                                echo '<p style="margin-left:14px">Company address: '.$row['company_address'].'</p>';
-                                
-                                echo '<a href="./views/artisan.php?id='.$row['artisan_id'].'" class="btn btn-primary btni">Voir plus</a>';
-                                echo '</div>';
-                                
-                            }
-                        }  
-                    }
-                    }
-                    else{
-                        echo '<h1>Aucun Artisan</h1>';
-                    }
-                    
-
-                ?>
+        <div class="container mt-5">
+        <div class="card">
+            <div class="card-header">
+                <h3>Profile</h3>
             </div>
+            <div class="card-body">
+            <form  method="post" action="<?php echo $_SERVER['PHP_SELF'];?>">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email"value="<?php echo $email; ?>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone:</label>
+                    <input type="tel" class="form-control" id="phone" name ="phone" value="<?php echo $num; ?>" disabled>
+                </div>
+                
+                    <button type="button" class="btn btn-black " id="updateBtn" onclick="enableProfileFields()">Update Profile</button>
+                    <button type="submit" class="btn btn-primary " id="saveBtn" style="display: none;">Save Profile</button>
+                </form>
             </div>
+        </div>
+    </div>
 
-        </main>
-        <footer class=" container py-5 me-5">
+    
+    </main>
+    <footer class=" container py-5 me-5">
         <div class="row">
             <div class="col-6 col-md">
                 <ul class="list-unstyled text-small ">
@@ -291,5 +261,19 @@ if(isset($_SESSION["USER_ID"])){
         </div>
     
     </footer>
+    <script>
+        function enableProfileFields() {
+            var emailInput = document.getElementById('email');
+            var updateBtn = document.getElementById('updateBtn');
+            var saveBtn = document.getElementById('saveBtn');
+            var phoneInput =document.getElementById('phone');
+          
+            emailInput.disabled = false;
+            phoneInput.disabled = false;
+           
+            updateBtn.style.display = 'none';
+            saveBtn.style.display = 'block';
+        }
+    </script>
     </body>
 </html>

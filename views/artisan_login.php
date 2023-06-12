@@ -35,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "INSERT INTO artisans (artisan_id, company_name, company_address, description, profile_picture) VALUES ('$user_id', '$company_name', '$company_ad', '$desc', '$destination')";
         if (mysqli_query($conn, $sql)) {
             $_SESSION["INFO"] = "true";
+            $_SESSION["ARTISAN_ID"] = $user_id;
             header("location: user_dashboard.php");
             exit;
         } else {

@@ -1,4 +1,5 @@
 <?php
+include_once '../db/dbhinc.php';
 session_start();
 $logout="false";
 $connexion = "true";
@@ -7,24 +8,49 @@ if(isset($_SESSION["USER_NAME"])){
   $connexion = "false";
 
 }
+if (!isset($_SESSION['USER_NAME'])) {
+    header("Location: index.php");
+ }
+ else{
+    if($_SESSION['ROLE'] != "artisan"){
+        header("Location: index.php");
+    }
+ }
+
+
 ?>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+ "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<html>
+    <head>
+        <link rel="shortcut icon" type="image/x-icon" href="./images/icon.ico" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.0/css/bootstrap.min.css">
 
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Artisan</title>
+        <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+        crossorigin="anonymous"
+        />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="stylesheet" href="../css/service.css">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="style" href="../css/user_dashboard.css">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
+    </head>
     <body>
-        <header>
+        <div class="im">
+            <header>
                 <nav class="navbar navbar-expand-lg navbar-dark shadow-5-strong mb-4 ">
                     <div class="container">
-                        <a class="navbar-brand" href="./index.php">
+                        <a class="navbar-brand" href="../index.php">
                             <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
                             width="134.000000pt" height="30.000000pt" viewBox="0 0 268.000000 100.000000"
                             preserveAspectRatio="xMidYMid meet">
@@ -131,60 +157,133 @@ if(isset($_SESSION["USER_NAME"])){
                             </g>
                             </svg>
                         </a>
+                        <div class="collapse navbar-collapse justify-content-space_between" id="navbarText">
                         <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
-                              <?php
-                                if($logout == "true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="logout.php">
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="artisan_dashboard.php">
+                                            <button type="button" class="btn transparent">
+                                                Home
+                                            </button>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="/profile.php">
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
                                     </a>
-                                    </li>';
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="logout.php">
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="/logout.php">
                                         <button type="button" class="btn transparent">
                                             logout
                                         </button>
-                                    </a> </li>';
-                                }
-                                if($connexion =="true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="login.php">
-                                        <button type="button" class="btn transparent">
-                                            Connexion
-                                        </button>
-                                    </a> </li>';
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="register.php">
-                                        <button type="button" class="btn transparent">
-                                            Inscription
-                                        </button>
-                                    </a> </li>';
-                                }
-                              ?>
+                                    </a>
+                                </li>
                       
       
                             </ul>
                         </div>
+                        </div>
                     </div>
                 </nav>
-        <nav>
-          <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Analytics</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Settings</a></li>
-          </ul>
-        </nav>
+            </header>
         <main>
-          <!-- Dashboard content goes here -->
+            <div class="container ">
+                <div>
+                    <?php 
+                        $aid = $_SESSION['USER_ID'];
+                        $sql = "SELECT * FROM requests WHERE artisan_id = '$aid' and status NOT LIKE 'accepted'";
+                        $result = mysqli_query($conn,$sql);
+                        if ($result !== false){
+                        if ($result->num_rows > 0) {
+                    ?>
+                    <h3>Requests</h3>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Service</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Status</th>
+                                <th scope ="col">Action</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td>".$row['date_requested']."</td>";
+                                        // echo "<td>".$row['user_id']."</td>";
+                                        $uid = $row['user_id'];
+                                        $sql2 = "SELECT * FROM users WHERE user_id = '$uid'";
+                                        $result2 = mysqli_query($conn,$sql2);
+                                        $row2 = $result2->fetch_assoc();
+                                        echo "<td>".$row2['username']."</td>";
+                                        $sid = $row['service_id'];
+                                        $sql3 = "SELECT * FROM services WHERE service_id = '$sid'";
+                                        $result3 = mysqli_query($conn,$sql3);
+                                        $row3 = $result3->fetch_assoc();
+                                        echo "<td>".$row3['service_name']."</td>";
+                                        echo "<td>".$row['description']."</td>";
+                                        echo "<td>".$row['location']."</td>";
+                                        echo "<td>".$row['status']."</td>";
+                                        echo "<td><a class='btn btn-primary' href='accept_request.php?request_id=".$row['request_id']."'>Accept</a></td>";
+                                        echo "</tr>";
+                                    }
+                                } }
+                                else{
+                                    echo "<h4 style='min-height:60vh'>You don't have any requests in this time</h4>";
+                                }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+               
+            </div>
         </main>
-        <footer>
-          <p>&copy; 2023 Your Company</p>
-        </footer>
-      </body>
-      </html>
-</body>
+        <footer class=" container py-5 me-5">
+        <div class="row">
+            <div class="col-6 col-md">
+                <ul class="list-unstyled text-small ">
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Besoin d'aide</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Contactez-nous</a>  
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">FAQ</a>  
+                    </li>
+
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <ul class="list-unstyled text-small">
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Qui sommes-nous</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Termes et conditions</a>
+                    </li>
+                    <li class ="p-2">
+                        <a class="link-secondary" href="#">Politique de confidentialité</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="  bt b-gray-300">
+            <a href="/" class=" text-dark">
+                <div>© 2023 Artisan, Inc.</div>
+            </a>
+        </div>
+    
+    </footer>
+    </body>
 </html>

@@ -1,14 +1,14 @@
 <?php
   include '../db/dbhinc.php';
   session_start();
-  
 $logout="true";
 $connexion = "false";
   //if (!isset($_SESSION['USER_NAME'])) {
-  //  header("Location: ../../index.php");
+   // header("Location: ../../index.php");
 //}
    // Retrieve artisan's information
-   $artisanId = 3; // Replace with the specific artisan's ID
+   $artisanId = $_SESSION["USER_ID"]; // Replace with the specific artisan's ID
+   echo $artisanId;
    $query = "SELECT * FROM Artisans JOIN Users ON Users.user_id = Artisans.artisan_id
    WHERE artisan_id = $artisanId AND Users.role = 'artisan'";
    
@@ -316,17 +316,23 @@ $connexion = "false";
                   WHERE Artisan_Services.artisan_id = $artisanId;";
         $result = mysqli_query($conn, $query);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-          while ($service = mysqli_fetch_assoc($result)) {
-            echo '<div class="service-item">';
-            echo '<h3>' . $service['service_name'] . '</h3>';
-            echo '<p>' . $service['service_description'] . '</p>';
-            echo '<div class="make-request">';
-            echo '<a href="#" class="btn btn-primary">Make a Request</a>';
-            echo '</div>';
-            echo '</div>';
-          }
-        } else {
+        $query = "SELECT * FROM Services";
+$result = mysqli_query($conn, $query);
+
+// Check if any services are found
+if (mysqli_num_rows($result) > 0) {
+  while ($service = mysqli_fetch_assoc($result)) {
+    echo '<div class="service-item">';
+    echo '<h3>' . $service['service_name'] . '</h3>';
+    echo '<p>' . $service['service_description'] . '</p>';
+    echo '<div class="make-request">';
+    echo '<a href="availabilities.php?service_id=' . $service['service_id'] . '" class="btn btn-primary">Make a Request</a>';
+    echo '</div>';
+    echo '</div>';
+  }
+}
+          
+         else {
           echo '<div class="service-item">';
           echo '<p>No services found.</p>';
           echo '</div>';
@@ -470,7 +476,8 @@ $connexion = "false";
           </div>
 
           <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
-          <form action="php_details.php" method="post" role="form" class="php-email-form">
+          <form name="test" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+
   <h1>Send me a message</h1>
   <div class="row"></div>
   <div class="form-group">
@@ -482,12 +489,30 @@ $connexion = "false";
     <textarea class="form-control" name="message" rows="10" required></textarea>
   </div>
   <div class="my-3">
-    <div class="loading">Loading</div>
-    <div class="error-message"></div>
-    <div class="sent-message">Your message has been sent. Thank you!</div>
+    
+   
   </div>
   <div class="text-center"><button type="submit" name="send-message">Send Message</button></div>
 </form>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $subject = $_POST['subject'];
+  $message = $_POST['message'];
+  $user_id = $_SESSION['USER_ID'];
+  $date_sent = date('Y-m-d H:i:s');
+  
+  $query = "INSERT INTO Messages (user_id, artisan_id, message_text, date_sent)
+            VALUES ('$user_id', '{$artisan['artisan_id']}', '$message', '$date_sent')";
+          
+  
+  if (mysqli_query($conn, $query)) {
+    echo "<div class='alert alert-success'>Your message has been sent. Thank you!</div>";
+  } 
+}
+?>
+
+
 
 
 

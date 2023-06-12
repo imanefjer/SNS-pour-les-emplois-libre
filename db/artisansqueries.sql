@@ -30,7 +30,7 @@ CREATE TABLE Artisan_Services (
 );
 
 CREATE TABLE Availabilities (
-  availability_id INT PRIMARY KEY,
+  availability_id INT PRIMARY KEY AUTO_INCREMENT,
   artisan_id INT,
   date DATE,
   start_time TIME,
@@ -39,8 +39,9 @@ CREATE TABLE Availabilities (
 );
 
 CREATE TABLE Requests (
-  request_id INT PRIMARY KEY,
+  request_id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT,
+  artisan_id INT,
   service_id INT,
   description TEXT,
   date_requested DATE,
@@ -51,7 +52,7 @@ CREATE TABLE Requests (
 );
 
 CREATE TABLE Quotes (
-  quote_id INT PRIMARY KEY,
+  quote_id INT PRIMARY KEY AUTO_INCREMENT,
   artisan_id INT,
   request_id INT,
   quote_amount DECIMAL(10, 2),
@@ -63,7 +64,7 @@ CREATE TABLE Quotes (
 );
 
 CREATE TABLE Payments (
-  payment_id INT PRIMARY KEY,
+  payment_id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT,
   artisan_id INT,
   request_id INT,
@@ -78,7 +79,7 @@ CREATE TABLE Payments (
 );
 
 CREATE TABLE Messages (
-  message_id INT PRIMARY KEY,
+  message_id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT,
   artisan_id INT,
   request_id INT,
@@ -90,7 +91,7 @@ CREATE TABLE Messages (
 );
 
 CREATE TABLE Notifications (
-  notification_id INT PRIMARY KEY,
+  notification_id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT,
   message TEXT,
   date_sent DATETIME,
@@ -99,7 +100,7 @@ CREATE TABLE Notifications (
 );
 
 CREATE TABLE Reviews (
-  review_id INT PRIMARY KEY,
+  review_id INT PRIMARY KEY AUTO_INCREMENT,
   user_id INT,
   artisan_id INT,
   rating INT,

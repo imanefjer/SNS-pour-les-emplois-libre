@@ -29,7 +29,7 @@
         
         // Check if the username or email already exists in the database
         $result = mysqli_query($conn, "SELECT * FROM users WHERE username='$username' OR email='$email'");
-        
+        if ($result){
         if (mysqli_num_rows($result) > 0) {
             // Username or email already exists in the database, display error message
             $error= "Username or email already exists";
@@ -41,7 +41,8 @@
                     $_SESSION["USER_EMAIL"] = $email;
                     $_SESSION["USER_ID"] = $userId;
                 $_SESSION["USER_NAME"] = $username; 
-                $_SESSION["ROLE"] = $role;                              
+                $_SESSION["ROLE"] = $role;  
+                                  echo  $_SESSION["USER_ID"];      
                 header("location: artisan_login.php");
                 exit;
                 }
@@ -58,7 +59,7 @@
             } else {
                 $error= "Error: " . $sql . "<br>" . mysqli_error($conn);
             }
-        }
+        }}
     }
 ?>
     <section>

@@ -5,8 +5,8 @@ $logout="false";
 $connexion = "true";
 if(isset($_SESSION["USER_NAME"])){
   
-  $logout ="false";
-  $connexion = "true";
+  $logout ="true";
+  $connexion = "false";
 
 }
 ?>
@@ -153,7 +153,7 @@ if(isset($_SESSION["USER_NAME"])){
                         <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/commentcamarche.php">
+                                    <a class="nav-link text-dark" href="#">
                                         <button type="button" class="btn transparent">
                                             Comment ça marche
                                         </button>
@@ -170,8 +170,14 @@ if(isset($_SESSION["USER_NAME"])){
                             <ul class="navbar-nav ml-auto">
                               <?php
                                 if($logout == "true"){
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/logout.php">
+                                    echo '<li class="nav-item">';
+                                    if ($_SESSION['ROLE'] == "artisan"){
+                                        echo '<a class="nav-link text-dark" href="./views/artisan_profile.php">';
+                                    }
+                                    else{
+                                        echo '<a class="nav-link text-dark" href="./views/profile.php">';
+                                    }
+                                    echo'
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
@@ -184,7 +190,7 @@ if(isset($_SESSION["USER_NAME"])){
                                         </button>
                                     </a> </li>';
                                 }
-                                if($connexion =="true"){
+                                else{
                                     echo '<li class="nav-item">
                                     <a class="nav-link text-dark" href="./views/login.php">
                                         <button type="button" class="btn transparent">

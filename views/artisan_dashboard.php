@@ -3,11 +3,28 @@ include_once '../db/dbhinc.php';
 session_start();
 $logout="false";
 $connexion = "true";
-if(isset($_SESSION["USER_ID"])){
+if(isset($_SESSION["USER_NAME"])){
   $logout ="true";
   $connexion = "false";
 
 }
+if (!isset($_SESSION['USER_NAME'])) {
+    header("Location: index.php");
+ }
+ else{
+    if($_SESSION['ROLE'] != "artisan"){
+        header("Location: index.php");
+    }
+ }
+ if(isset($_GET['request_id'])) {
+    $requestId = $_GET['request_id'];
+    $stmt = $conn->prepare("UPDATE requests SET status = ? WHERE request_id = '$requestId'");
+    $stmt->bind_param('s', $status);
+    
+    $status = 'Accepted';
+    $requestId = $_GET['request_id'];
+    $stmt->execute();
+} 
 
 ?>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -152,9 +169,9 @@ if(isset($_SESSION["USER_ID"])){
                         <div class="collapse navbar-collapse justify-content-end" id="navbarText">
                             <ul class="navbar-nav ml-auto">
                               <?php
-                                if($logout == "true"){
+                            
                                     echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="profile.php">
+                                    <a class="nav-link text-dark" href="artisan_profile.php">
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
@@ -166,21 +183,6 @@ if(isset($_SESSION["USER_ID"])){
                                             logout
                                         </button>
                                     </a> </li>';
-                                }
-                                else{
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="login.php">
-                                        <button type="button" class="btn transparent">
-                                            Connexion
-                                        </button>
-                                    </a> </li>';
-                                    echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="./views/register.php">
-                                        <button type="button" class="btn transparent">
-                                            Inscription
-                                        </button>
-                                    </a> </li>';
-                                }
                               ?>
                       
       
@@ -191,68 +193,88 @@ if(isset($_SESSION["USER_ID"])){
                 </nav>
             </header>
         <main>
-            <div class="container py-5 me-5">
-            <div class="row">
-                <style>
-                    .img{
-                        max-width: 10%;
-                    }
-                    .btni{
-                        margin-left: 46%;
-                    }
-                    .container3{
-                        border: double;
-                        border-color: grey;
-                        padding: 20px;
-                        width: 95%;
-                        margin-left: 20px;
-                        margin-top: 2px;
-                    }
-                    .name{
-                        color:blueviolet;
-                    }
-                    .arti{
-                        font-family: cursive;
-                        margin-bottom: 15px;
-                    }
-                </style>
-                <?php
-                    $sid = $_GET['service'];
-                    $result = mysqli_query($conn,"SELECT * FROM artisan_services WHERE service_id = '$sid'");
-                    if(mysqli_num_rows($result) > 0){
-                        echo '<h1 class ="arti" >Nos Artisans:</h1>';
-                        
-                        while($res =mysqli_fetch_array($result) )
-                        {
-                            $id = $res['artisan_id'];
-                            $result1 = mysqli_query($conn,"SELECT * FROM artisans a JOIN users u on u.user_id = a.artisan_id  WHERE artisan_id = '$id' ");
-                            if(mysqli_num_rows($result1) > 0){
-
-                            while($row = mysqli_fetch_array($result1)){
-                                echo '<div class= "container3">';
-                                echo '<div><img  class="img-fluid img-thumbnail img" src="'.$row['profile_picture'].'" "></div>';
-                                
-                                echo '<div style="margin-top:5px; margin-left:5px"><h5 class="card-title name">Name: '.$row['username'].'</h5>';
-                                echo '<p style="margin-left:10px">Description: '.$row['description'].'</p></div>';
-                                echo '<p style="margin-left:14px">Company name: '.$row['company_name'].'</p>';
-                                echo '<p style="margin-left:14px">Company address: '.$row['company_address'].'</p>';
-                                
-                                echo '<a href="./views/artisan.php?id='.$row['artisan_id'].'" class="btn btn-primary btni">Voir plus</a>';
-                                echo '</div>';
-                                
+            <div class="container ">
+                <div>
+                    <h3>Orders</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col">User</th>
+                                <th scope="col">Service</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $aid = $_SESSION['USER_ID'];
+                                $sql = "SELECT * FROM requests WHERE artisan_id = '$aid'";
+                                $result = mysqli_query($conn,$sql);
+                                if ($result !== false){
+                                if ($result->num_rows > 0) {
+                                    while($row = $result->fetch_assoc()) {
+                                        echo "<tr>";
+                                        echo "<td>".$row['date_requested']."</td>";
+                                        // echo "<td>".$row['user_id']."</td>";
+                                        $uid = $row['user_id'];
+                                        $sql2 = "SELECT * FROM users WHERE user_id = '$uid'";
+                                        $result2 = mysqli_query($conn,$sql2);
+                                        $row2 = $result2->fetch_assoc();
+                                        echo "<td>".$row2['username']."</td>";
+                                        $sid = $row['service_id'];
+                                        $sql3 = "SELECT * FROM services WHERE service_id = '$sid'";
+                                        $result3 = mysqli_query($conn,$sql3);
+                                        $row3 = $result3->fetch_assoc();
+                                        echo "<td>".$row3['service_name']."</td>";
+                                        echo "<td>".$row['description']."</td>";
+                                        echo "<td>".$row['location']."</td>";
+                                        echo "<td>".$row['status']."</td>";
+                                        echo "</tr>";
+                                    }
+                                } }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <!-- button see you requests -->
+                    <a href="artisan_requests.php">
+                        <button type="button" class="btn btn-primary m-3">See Requests</button>
+                </div>
+                <div>
+                    <h4>Messages</h4>
+                    <?php
+                        $sql = "SELECT * FROM messages WHERE artisan_id = '$aid'";
+                        $result = mysqli_query($conn, $sql);
+                        if ($result->num_rows > 0) {
+                            echo '<div class="d-flex flex-wrap ">';
+                            while ($row = $result->fetch_assoc()) {
+                                $uid = $row['user_id'];
+                                $sql2 = "SELECT * FROM users WHERE user_id = '$uid'";
+                                $result2 = mysqli_query($conn, $sql2);
+                                $row2 = $result2->fetch_assoc();
+                        ?>
+                                <div class="col-lg-4 col-md-6 col-sm-12">
+                                    <div class="card  square-card  m-3">
+                                        <div class="card-header">
+                                            Date: <?php echo date('d-m-Y', strtotime($row['date_sent'])); ?>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">User: <?php echo $row2['username']; ?></h5>
+                                            <p class="card-text"><?php echo $row['message_text']; ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                        <?php
                             }
-                        }  
-                    }
-                    }
-                    else{
-                        echo '<h1>Aucun Artisan</h1>';
-                    }
-                    
-
-                ?>
+                        } else {
+                            echo "No messages found.";
+                        }
+                        ?>
+                </div>
             </div>
-            </div>
-
         </main>
         <footer class=" container py-5 me-5">
         <div class="row">
