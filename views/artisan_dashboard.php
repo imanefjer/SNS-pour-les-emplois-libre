@@ -212,6 +212,7 @@ if (!isset($_SESSION['USER_NAME'])) {
                             $aid = $_SESSION['USER_ID'];
                                 $sql = "SELECT * FROM requests WHERE artisan_id = '$aid'";
                                 $result = mysqli_query($conn,$sql);
+                                if ($result !== false){
                                 if ($result->num_rows > 0) {
                                     while($row = $result->fetch_assoc()) {
                                         echo "<tr>";
@@ -232,7 +233,7 @@ if (!isset($_SESSION['USER_NAME'])) {
                                         echo "<td>".$row['status']."</td>";
                                         echo "</tr>";
                                     }
-                                } 
+                                } }
                             ?>
                         </tbody>
                     </table>
