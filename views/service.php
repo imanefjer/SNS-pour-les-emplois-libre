@@ -204,11 +204,11 @@ if(isset($_SESSION["USER_ID"])){
                             $id = $res['artisan_id'];
                             $result1 = mysqli_query($conn,"SELECT * FROM artisans WHERE artisan_id = '$id' ");
                             if(mysqli_num_rows($result1) > 0){
-
+                                if($result1 == true){
                             while($row = mysqli_fetch_array($result1)){
-                                // echo '<div class="col-12 col-md-6 col-lg-4">';
+                                
                                 echo '<div class="card m-2" style="width: 23rem;">';
-                                // echo '<img src="./assets/images/'.$row['profile_picture'].'" class="card-img-top" alt =...>';
+                              
                                 echo '<div class="card-body">';
                                 $uid=$row['user_id'];
                                 $result2 = mysqli_query($conn,"SELECT * FROM users WHERE user_id = '$uid'");
@@ -222,10 +222,8 @@ if(isset($_SESSION["USER_ID"])){
                         }  
                     }
                     }
-                    else{
-                        echo '<h1>Aucun Artisan</h1>';
-                    }
                     
+                }
 
                 ?>
             </div>

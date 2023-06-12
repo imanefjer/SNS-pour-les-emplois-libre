@@ -3,11 +3,13 @@
   session_start();
 $logout="true";
 $connexion = "false";
-  //if (!isset($_SESSION['USER_NAME'])) {
-   // header("Location: ../../index.php");
-//}
+
+
+  if (!isset($_SESSION['USER_ID'])) {
+    header("Location: ../../index.php");
+}
    // Retrieve artisan's information
-   $artisanId = $_SESSION["USER_ID"]; // Replace with the specific artisan's ID
+   $artisanId = 3; // Replace with the specific artisan's ID
    echo $artisanId;
    $query = "SELECT * FROM Artisans JOIN Users ON Users.user_id = Artisans.artisan_id
    WHERE artisan_id = $artisanId AND Users.role = 'artisan'";
