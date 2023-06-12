@@ -2,6 +2,7 @@
 include '../db/dbhinc.php';
 session_start();
 $logout="false";
+$user_id = $_SESSION["USER_ID"];
 $connexion = "true";
 if(isset($_SESSION["USER_NAME"])){
   $logout ="true";
@@ -17,7 +18,8 @@ if (!isset($_SESSION['USER_NAME'])) {
     }
  }
  $artisanId = $_GET['artisan_id'];
- 
+ $serviceId = $_GET['service_id'];
+
 
 ?>
 
@@ -211,41 +213,89 @@ if (!isset($_SESSION['USER_NAME'])) {
   <div class="container">
     <h1>Book a Service</h1>
     <div id="availabilities-container">
-      <?php
+    <?php
+  // Retrieve the artisan ID and service ID from the URL
+  $artisanId = $_GET['artisan_id'];
+  $serviceId = $_GET['service_id'];
 
-      $query = "SELECT DISTINCT a.date, a.start_time, a.end_time
-      FROM Artisan_Services AS s
-      INNER JOIN Availabilities AS a ON s.artisan_id = a.artisan_id
-      WHERE s.artisan_id = $artisanId";
+  $query = "SELECT DISTINCT a.date, a.start_time, a.end_time
+  FROM Artisan_Services AS s
+  INNER JOIN Availabilities AS a ON s.artisan_id = a.artisan_id
+  WHERE s.artisan_id = $artisanId";
 
-      $result = mysqli_query($conn, $query);
+  $result = mysqli_query($conn, $query);
 
-      // Check if the query was executed successfully
-      if ($result) {
-        // Check if there are availabilities for the selected artisan
-        if (mysqli_num_rows($result) > 0) {
-          // Display the availabilities as options in the form select field
-          while ($row = mysqli_fetch_assoc($result)) {
-            $date = $row['date'];
-            $startTime = $row['start_time'];
-            $endTime = $row['end_time'];
-
-            echo '<div class="availability-item">';
-            echo "<p>$date, $startTime - $endTime</p>";
-            echo '<button onclick="bookAvailability(\'' . $date . ' ' . $startTime . '\')">Book This</button>';
-            echo '</div>';
-          }
-        } else {
-          echo "<p>No availabilities found</p>";
-        }
-      } else {
-        echo "Query execution failed: " . mysqli_error($conn);
+  // Check if the query was executed successfully
+  if ($result) {
+    // Check if there are availabilities for the selected artisan
+    if (mysqli_num_rows($result) > 0) {
+      // Display the availabilities as options in the form select field
+      while ($row = mysqli_fetch_assoc($result)) {
+        $date = $row['date'];
+        $startTime = $row['start_time'];
+        $endTime = $row['end_time'];
+        echo '<div class="availability-item">';
+        echo "<p>$date, $startTime - $endTime</p>";
+        echo '<form method="post" action="'.htmlspecialchars($_SERVER["PHP_SELF"]).'?artisan_id='.$artisanId.'&service_id='.$serviceId.'">';
+        echo '<input type="hidden" name="availability" value="'.$date.' '.$startTime.'">';
+        echo '<input type="hidden" name="artisanId" value="'.$artisanId.'">';
+        echo '<input type="hidden" name="serviceId" value="'.$serviceId.'">';
+        echo '<button type="submit" name="book">Book This</button>';
+        echo '</form>';
+        echo '</div>';
       }
+    } else {
+      echo "<p>No availabilities found</p>";
+    }
+  } else {
+    echo "Query execution failed: " . mysqli_error($conn);
+  }
 
-      ?>
-    </div>
+  // Handle the booking request
+  if (isset($_POST['book'])) {
+    $availability = $_POST['availability'];
+    $artisanId = $_POST['artisanId'];
+    $serviceId = $_POST['serviceId'];
+    
+   // Handle the booking request
+if (isset($_POST['book'])) {
+  $availability = $_POST['availability'];
+
+  // Delete the selected availability from the Availabilities table
+  $deleteQuery = "DELETE FROM Availabilities WHERE artisan_id = $artisanId AND date = DATE('$availability') AND start_time = TIME('$availability')";
+  $deleteResult = mysqli_query($conn, $deleteQuery);
+
+  $locationQuery = "SELECT company_address FROM Artisans WHERE artisan_id = $artisanId";
+  $locationResult = mysqli_query($conn, $locationQuery);
+  $locationRow = mysqli_fetch_assoc($locationResult);
+  $location = $locationRow['company_address'];
+  
+  // Add a request to the Requests table
+  $insertQuery = "INSERT INTO Requests (user_id,  service_id, date_requested, status, location) 
+  VALUES ('$user_id', '$serviceId', NOW(), 'Pending', '$location')";
+$insertResult = mysqli_query($conn, $insertQuery);
+
+
+  echo $insertResult;
+
+
+
+  // Check if the database modifications were successful
+  if ($deleteResult && $insertResult) {
+    // Modifications were successful, you can redirect the user or display a success message
+    echo "Booking successful!";
+  } else {
+    // Modifications failed, you can display an error message or handle the failure case
+    echo "Booking failed!";
+  }
+}
+
+  }
+?>
+
     
   </div>
+
 
   <script>
     function bookAvailability(selectedAvailability) {

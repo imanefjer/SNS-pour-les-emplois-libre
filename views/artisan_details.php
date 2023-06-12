@@ -188,7 +188,7 @@ $artisanId = $_GET['artisan_id'];
                               <?php
                                 if($logout == "true"){
                                     echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="logout.php">
+                                    <a class="nav-link text-dark" href="profile.php">
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
@@ -324,7 +324,7 @@ if (mysqli_num_rows($result) > 0) {
     echo '<h3>' . $service['service_name'] . '</h3>';
     echo '<p>' . $service['service_description'] . '</p>';
     echo '<div class="make-request">';
-    echo '<a href="availabilities.php?service_id=' . $service['service_id'] . '&artisan_id=' . $artisanId . '" class="btn btn-primary">Make a Request</a>';
+    echo '<a href="availabilities.php?service_id=' . $service['service_id'] . '&artisan_id=' . $artisanId . '" class="btn btn-primary" id="botona">Make a Request</a>';
     echo '</div>';
     echo '</div>';
   }
@@ -343,6 +343,10 @@ if (mysqli_num_rows($result) > 0) {
 </section><!-- End Services Section -->
 
 
+
+<div style="display: flex; justify-content: center; align-items: center; height: 10vh;">
+  <button style="padding: 10px 20px; background-color: rgb(63,48,69); color: white; border: none; cursor: pointer; border-radius: 4px;" onclick="window.location.href = 'rate.php?artisan_id=<?php echo $artisanId; ?>'">Rate This Artisan</button>
+</div>
 
 
 
