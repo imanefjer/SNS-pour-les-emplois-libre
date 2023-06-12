@@ -3,7 +3,7 @@
   session_start();
 $logout="true";
 $connexion = "false";
-$artisanId = $_GET['artisan_id'];
+$artisanId = $_SESSION["ARTISANID"];
   if (!isset($_SESSION['USER_ID'])) {
     header("Location: ../../index.php");
 }
@@ -450,7 +450,7 @@ if (mysqli_num_rows($result) > 0) {
           </div>
 
           <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
-          <form name="test" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+          <form name="test" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" >
 
   <h1>Send me a message</h1>
   <div class="row"></div>
@@ -480,9 +480,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             VALUES ('$user_id', '{$artisan['artisan_id']}', '$message', '$date_sent')";
           
   
-  if (mysqli_query($conn, $query)) {
-    echo "<div class='alert alert-success'>Your message has been sent. Thank you!</div>";
-  } 
+          if (mysqli_query($conn, $query)) {
+            echo "<div class='alert alert-success' >Your message has been sent. Thank you!</div>";
+          } 
 }
 ?>
 
