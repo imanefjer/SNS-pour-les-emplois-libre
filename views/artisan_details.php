@@ -1,14 +1,14 @@
 <?php
   include '../db/dbhinc.php';
   session_start();
-  
 $logout="true";
 $connexion = "false";
-  if (!isset($_SESSION['USER_NAME'])) {
-    header("Location: ../../index.php");
-}
+  //if (!isset($_SESSION['USER_NAME'])) {
+   // header("Location: ../../index.php");
+//}
    // Retrieve artisan's information
-   $artisanId = 3; // Replace with the specific artisan's ID
+   $artisanId = $_SESSION["USER_ID"]; // Replace with the specific artisan's ID
+   echo $artisanId;
    $query = "SELECT * FROM Artisans JOIN Users ON Users.user_id = Artisans.artisan_id
    WHERE artisan_id = $artisanId AND Users.role = 'artisan'";
    
@@ -316,17 +316,23 @@ $connexion = "false";
                   WHERE Artisan_Services.artisan_id = $artisanId;";
         $result = mysqli_query($conn, $query);
 
-        if ($result && mysqli_num_rows($result) > 0) {
-          while ($service = mysqli_fetch_assoc($result)) {
-            echo '<div class="service-item">';
-            echo '<h3>' . $service['service_name'] . '</h3>';
-            echo '<p>' . $service['service_description'] . '</p>';
-            echo '<div class="make-request">';
-            echo '<a href="#" class="btn btn-primary">Make a Request</a>';
-            echo '</div>';
-            echo '</div>';
-          }
-        } else {
+        $query = "SELECT * FROM Services";
+$result = mysqli_query($conn, $query);
+
+// Check if any services are found
+if (mysqli_num_rows($result) > 0) {
+  while ($service = mysqli_fetch_assoc($result)) {
+    echo '<div class="service-item">';
+    echo '<h3>' . $service['service_name'] . '</h3>';
+    echo '<p>' . $service['service_description'] . '</p>';
+    echo '<div class="make-request">';
+    echo '<a href="availabilities.php?service_id=' . $service['service_id'] . '" class="btn btn-primary">Make a Request</a>';
+    echo '</div>';
+    echo '</div>';
+  }
+}
+          
+         else {
           echo '<div class="service-item">';
           echo '<p>No services found.</p>';
           echo '</div>';
