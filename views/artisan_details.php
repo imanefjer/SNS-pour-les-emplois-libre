@@ -3,12 +3,12 @@
   session_start();
 $logout="true";
 $connexion = "false";
-  //if (!isset($_SESSION['USER_NAME'])) {
-   // header("Location: ../../index.php");
-//}
+$artisanId = $_GET['artisan_id'];
+  if (!isset($_SESSION['USER_ID'])) {
+    header("Location: ../../index.php");
+}
    // Retrieve artisan's information
-   $artisanId = $_SESSION["USER_ID"]; // Replace with the specific artisan's ID
-   echo $artisanId;
+ // Replace with the specific artisan's ID
    $query = "SELECT * FROM Artisans JOIN Users ON Users.user_id = Artisans.artisan_id
    WHERE artisan_id = $artisanId AND Users.role = 'artisan'";
    
@@ -188,7 +188,7 @@ $connexion = "false";
                               <?php
                                 if($logout == "true"){
                                     echo '<li class="nav-item">
-                                    <a class="nav-link text-dark" href="logout.php">
+                                    <a class="nav-link text-dark" href="profile.php">
                                         <button type="button" class="btn transparent">
                                             Profile
                                         </button>
@@ -310,15 +310,13 @@ $connexion = "false";
     <div class="row">
       <div class="col-lg-12">
         <?php
-        $query = "SELECT Services.service_name, Services.service_description
+        $query = "SELECT *
                   FROM Services
                   JOIN Artisan_Services ON Services.service_id = Artisan_Services.service_id
                   WHERE Artisan_Services.artisan_id = $artisanId;";
         $result = mysqli_query($conn, $query);
 
-        $query = "SELECT * FROM Services";
-$result = mysqli_query($conn, $query);
-
+       
 // Check if any services are found
 if (mysqli_num_rows($result) > 0) {
   while ($service = mysqli_fetch_assoc($result)) {
@@ -326,7 +324,7 @@ if (mysqli_num_rows($result) > 0) {
     echo '<h3>' . $service['service_name'] . '</h3>';
     echo '<p>' . $service['service_description'] . '</p>';
     echo '<div class="make-request">';
-    echo '<a href="availabilities.php?service_id=' . $service['service_id'] . '" class="btn btn-primary">Make a Request</a>';
+    echo '<a href="availabilities.php?service_id=' . $service['service_id'] . '&artisan_id=' . $artisanId . '" class="btn btn-primary" id="botona">Make a Request</a>';
     echo '</div>';
     echo '</div>';
   }
@@ -345,6 +343,10 @@ if (mysqli_num_rows($result) > 0) {
 </section><!-- End Services Section -->
 
 
+
+<div style="display: flex; justify-content: center; align-items: center; height: 10vh;">
+  <button style="padding: 10px 20px; background-color: rgb(63,48,69); color: white; border: none; cursor: pointer; border-radius: 4px;" onclick="window.location.href = 'rate.php?artisan_id=<?php echo $artisanId; ?>'">Rate This Artisan</button>
+</div>
 
 
 

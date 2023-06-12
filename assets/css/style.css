@@ -23,7 +23,9 @@ a:hover {
   color: rgb(63,48,69);
   text-decoration: none;
 }
-
+#botona{
+  background-color: rgb(63,48,69);
+}
 h1,
 h2,
 h3,
@@ -997,7 +999,7 @@ section {
 }
 
 .contact .php-email-form button[type=submit] {
-  background: #149ddd;
+  background: rgb(63,48,69);
   border: 0;
   padding: 10px 24px;
   color: #fff;
