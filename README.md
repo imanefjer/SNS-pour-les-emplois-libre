@@ -1,6 +1,8 @@
 # SNS-pour emplois libre
 
 SNS-pour emplois libre est un service de réseau social convivial qui relie les chercheurs d'emploi et les employeurs. Cette plateforme permet la création de profils, le téléchargement de CV et la recherche efficace d'emplois. Les employeurs peuvent publier des offres d'emploi, examiner les profils des candidats et communiquer de manière transparente. Le projet a été développé en utilisant les technologies HTML, CSS, PHP et MySQL pour créer une plateforme de recherche d'emploi dynamique et interactive.
+![Project Image](images/readme1.png)
+![Project Image](images/readme2.png)
 
 ## Fonctionnalités principales
 
